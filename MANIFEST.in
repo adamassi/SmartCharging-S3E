@@ -1,0 +1,2 @@
+recursive-include sim_ur5/mujoco_env/assets *
+recursive-include sim_ur5/motion_planning/assets *

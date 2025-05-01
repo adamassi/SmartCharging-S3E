@@ -1,0 +1,9 @@
+<body name="battery_body" pos="-0.3 -0.3 0.03">
+    <freejoint name="battery_fj"/>
+
+    <!-- Main battery geometry using detailed mesh -->
+    <geom name="battery_main" type="mesh" mesh="battery_mesh" material="battery_mat" contype="1" conaffinity="1" friction="0.8 0.1 0.1"/>
+
+    <!-- Optional LED -->
+    <geom name="battery_led" type="sphere" size="0.005" pos="0 0 0.065" rgba="1 0 0 1"/>
+</body>

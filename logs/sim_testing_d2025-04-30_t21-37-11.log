@@ -1,0 +1,2 @@
+2025-04-30 21:37:11 - root - INFO - Logging setup complete for sim_testing
+2025-04-30 21:37:13 - absl - WARNING - Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.6100.

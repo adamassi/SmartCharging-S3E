@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: Klampt
+Version: 0.9.1.post4
+Summary: Python API to Klamp't, a package for robot modeling, simulating, planning, optimization, and visualization
+Home-page: https://github.com/krishauser/Klampt
+Author: Kris Hauser
+Author-email: hauser.kris@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Topic :: Scientific/Engineering
+Requires-Dist: PyOpenGL
+Requires-Dist: numpy (>=1.20.0)
+
+UNKNOWN
+
