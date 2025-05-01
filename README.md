@@ -19,8 +19,8 @@ The simulation environment provides a simplified setup for:
 ## Clone the repository:
 
 ```bash
-git clone https://github.com/CLAIR-LAB-TECHNION/AIR_robots_sim.git
-cd AIR_robots_sim
+git clone https://github.com/adamassi/SmartCharging-S3E
+cd SmartCharging-S3E
 ```
 ## to run :
 1
