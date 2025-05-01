@@ -1,0 +1,47 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.env/
+.venv/
+venv/
+ENV/
+env.bak/
+*.env
+
+# MuJoCo
+*.mjb
+*.mjkey
+mjkey.txt
+
+# Logs and debug files
+*.log
+*.out
+*.err
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+*.swp
+
+# Build and distribution directories
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
