@@ -1,3 +1,0 @@
-2025-04-30 20:53:49 - root - INFO - Logging setup complete for sim_testing
-2025-04-30 20:53:49 - OpenGL.acceleratesupport - INFO - No OpenGL_accelerate module loaded: No module named 'OpenGL_accelerate'
-2025-04-30 20:53:49 - OpenGL.GLUT.special - INFO - Using NT-specific GLUT calls with exit callbacks
