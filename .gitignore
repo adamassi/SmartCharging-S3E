@@ -45,3 +45,6 @@ dist/
 *.bak
 *.swp
 *.swo
+venv/pyvenv.cfg
+.gitignore
+venv/pyvenv.cfg

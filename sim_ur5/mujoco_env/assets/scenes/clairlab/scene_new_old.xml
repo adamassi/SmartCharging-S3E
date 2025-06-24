@@ -1,0 +1,130 @@
+<mujoco model="tableworld">
+    <!-- ⚙️ MuJoCo basic settings -->
+    <compiler eulerseq="XYZ"/> <!-- Specifies the Euler angle sequence for rotations -->
+    <statistic center="0.3 0 0.4" extent="0.8"/> <!-- 📊 Defines the center and extent of the simulation statistics -->
+
+    <!-- 💡 Lighting and camera settings -->
+    <visual>
+        <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1"/> <!-- 💡 Configures the headlight with diffuse and ambient lighting -->
+        <rgba haze="0.15 0.25 0.35 1"/> <!-- 🌫️ Adds a haze effect to the environment -->
+        <global azimuth="120" elevation="-20" offwidth="1280" offheight="720"/> <!-- 🌍 Sets global lighting and rendering parameters -->
+    </visual>
+
+    <!-- 🖼️ Assets: textures, materials, meshes -->
+    <asset>
+        <texture file="../../objects/bin_dark_wood/textures/dark-wood.png" type="2d" name="tex-dark-wood" />
+        <material name="dark-wood" reflectance="0.7" texrepeat="15 15" texture="tex-dark-wood"
+            texuniform="true" />
+        <!-- 🍼 Bottle assets -->
+        <mesh file="../../objects/bottle/meshes/bottle.stl" name="bottle_mesh"/> <!-- 🏗️ 3D mesh for the bottle -->
+        <texture type="2d" file="../../objects/bottle/textures/glass.png" name="tex-glass"/> <!-- 🖌️ Texture for the bottle -->
+        <material name="glass" reflectance="0.5" texrepeat="5 5" texture="tex-glass" texuniform="true"/> <!-- 🪞 Material for the bottle with glass-like properties -->
+
+        <!-- 🔋 Battery assets -->
+        <mesh file="../../objects/battery/meshes/battery.stl" name="battery_mesh"/> <!-- 🏗️ 3D mesh for the battery -->
+        <texture type="2d" file="../../objects/battery/textures/battery_BaseColor.png" name="tex-battery"/> <!-- 🖌️ Texture for the battery -->
+        <material name="battery" reflectance="0.5" texrepeat="5 5" texture="tex-battery" texuniform="true"/> <!-- 🪞 Material for the battery -->
+
+        <!-- 🌌 Environment textures -->
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/> <!-- 🌈 Skybox gradient for the environment -->
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/> <!-- 🟦 Checkerboard texture for the ground -->
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/> <!-- 🪞 Material for the groundplane -->
+
+        <!-- 🪵 Table and block materials -->
+        <texture name="wood" file="wood.png" type="2d"/> <!-- 🖌️ Texture for wooden objects -->
+        <material name="wood_material" texture="wood" texrepeat="50 50" texuniform="true" rgba="0.8 0.8 0.8 1"/> <!-- 🪵 Material for wooden objects -->
+    </asset>
+
+    <worldbody>
+        <!-- 🍼 Bottle object -->
+        <body name="object1">
+            <geom pos="0.1 -0.4 0.2" mesh="bottle_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="glass" contype="0" conaffinity="0" group="1"/> <!-- 🍼 Bottle geometry with glass material -->
+            <geom pos="0.1 -0.4 0.2" mesh="bottle_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="glass" group="0"/> <!-- 🍼 Duplicate bottle geometry for visualization -->
+        </body>
+
+        <!-- 🔋 Battery object -->
+        <body name="object2">
+            <geom pos="0.1 -0.3 0.03" mesh="battery_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="battery" contype="0" conaffinity="0" group="1"/> <!-- 🔋 Battery geometry with battery material -->
+            <geom pos="0.1 -0.3 0.03" mesh="battery_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="battery" group="0"/> <!-- 🔋 Duplicate battery geometry for visualization -->
+        </body>
+        <!-- 🔋 Battery object -->
+        
+        <body name="battery0_fj">
+             
+            <geom pos="-0.8 0.1 0.03" mesh="battery_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="battery" contype="0" conaffinity="0" group="1"/> <!-- 🔋 Battery geometry with battery material -->
+            <geom pos="-0.8 0.1 0.03"  mesh="battery_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50"
+                  friction="0.95 0.3 0.1" material="battery" group="0"/> <!-- 🔋 Duplicate battery geometry for visualization -->
+        </body>
+        
+        <!-- 💡 Global light source -->
+        <light pos="0 0 1.5" dir="0 0 -1" directional="true"/> <!-- 💡 Directional light source -->
+
+        <!-- 🟦 Ground plane -->
+        <geom name="floor" pos="0.0 0.0 -0.8" size="0 0 0.05" type="plane" material="groundplane"/> <!-- 🟦 Ground plane with checkerboard material -->
+
+        <!-- 🪑 Table 1 -->
+        <body name="table1" pos="0.365 0 -0.005">
+            <geom name="table1_top" type="box" size="0.625 0.42 0.01" pos="0 0 0"/> <!-- 🪑 Tabletop geometry -->
+            <geom name="table1_leg_1" type="cylinder" size=".02 .4" pos=".5 -.33 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 1 -->
+            <geom name="table1_leg_2" type="cylinder" size=".02 .4" pos=".5 .33 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 2 -->
+            <geom name="table1_leg_3" type="cylinder" size=".02 .4" pos="-.5 -.33 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 3 -->
+            <geom name="table1_leg_4" type="cylinder" size=".02 .4" pos="-.5 .33 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 4 -->
+        </body>
+
+        <!-- 🪑 Table 2 -->
+        <body name="table2" pos="-0.805 -0.615 -0.005">
+            <geom name="table2_top" type="box" size="0.42 0.925 0.01" pos="0 0 0"/> <!-- 🪑 Tabletop geometry -->
+            <geom name="table2_leg_1" type="cylinder" size=".02 .4" pos=".33 -.8 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 1 -->
+            <geom name="table2_leg_2" type="cylinder" size=".02 .4" pos=".33 .8 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 2 -->
+            <geom name="table2_leg_3" type="cylinder" size=".02 .4" pos="-.33 -.8 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 3 -->
+            <geom name="table2_leg_4" type="cylinder" size=".02 .4" pos="-.33 .8 -.4" euler="0 0 0"/> <!-- 🦵 Table leg 4 -->
+        </body>
+
+        <!-- 🔋 Batteries on table -->
+        <body name="battery_1" pos="-0.6 -0.6 0.05">
+            <geom type="cylinder" size="0.013 0.025" rgba="0.2 0.8 0.2 1" mass="0.1"/> <!-- 🔋 Simple cylinder battery -->
+        </body>
+
+        <body name="battery_2" pos="-0.6 -0.5 0.05">
+            <geom type="mesh" mesh="battery_mesh" rgba="0.5 0.8 0.2 1" mass="0.1"/> <!-- 🔋 Detailed 3D mesh battery -->
+        </body>
+
+        <!-- 🪵 Wooden battery -->
+        <body name="batter" pos="-0.5 -0.8 0.03" quat="0. 0. 1. 0.">
+            <freejoint name="battery0_fj"/> <!-- 🔗 Free joint for the wooden battery -->
+            <geom type="box" size=".02 .02 .02" material="wood_material" mesh="battery_mesh"/> <!-- 🪵 Wooden battery geometry -->
+        </body>
+        <body name="bin_dark_wood">
+
+            <!-- bottom the mid p (-.6,0)-->
+            <geom pos="-0.6 0 0" size="0.1 0.125 0.02" type="box" group="0" friction="1 0.005 0.0001" rgba="1 0 0 0" />
+            <geom pos="-0.6 0 0" size="0.1 0.125 0.02" type="box" conaffinity="0" contype="0" group="1" material="dark-wood" />
+            
+            <!-- side 1 up-->
+            <geom pos="-0.6 0.125 0.05" size="0.105 0.01 0.05" type="box" group="0" friction="1 0.005 0.0001" rgba="1 0 0 0" />
+            <geom pos="-0.6 0.125 0.05" size="0.105 0.01 0.05" type="box" conaffinity="0" contype="0" group="1" material="dark-wood" />
+
+             <!-- side 2 down-->
+            <geom pos="-0.6 -0.125 0.05" size="0.105 0.01 0.05" type="box" group="0" friction="1 0.005 0.0001" rgba="1 0 0 0" />
+            <geom pos="-0.6 -0.125 0.05" size="0.105 0.01 0.05" type="box" conaffinity="0" contype="0" group="1" material="dark-wood" />
+
+
+            <!-- side 3 right-->
+            <geom pos="-0.5 0 0.05" size="0.01 0.125 0.05" type="box" group="0" friction="1 0.005 0.0001" rgba="1 0 0 0" />
+            <geom pos="-0.5 0 0.05" size="0.01 0.125 0.05" type="box" conaffinity="0" contype="0" group="1" material="dark-wood" />
+           
+            <!-- side 4 lift-->
+            <geom pos="-0.7 0 0.05" size="0.01 0.125 0.05" type="box" group="0" friction="1 0.005 0.0001" rgba="1 0 0 0" />
+            <geom pos="-0.7 0 0.05" size="0.01 0.125 0.05" type="box" conaffinity="0" contype="0" group="1" material="dark-wood" />
+        </body>
+
+        <!-- 🎥 Cameras -->
+        <camera name="top-right" pos="1.3 -1.5 1.1" euler="1 0 1.1"/> <!-- 🎥 Camera positioned at the top-right -->
+        <camera name="robot-cam" pos="1.3 -1.5 1.1" euler="1 0 1.1" fovy="60"/> <!-- 🤖 Robot camera with a field of view -->
+    </worldbody>
+</mujoco>
