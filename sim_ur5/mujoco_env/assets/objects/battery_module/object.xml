@@ -1,0 +1,17 @@
+<mujoco model="battery_module">
+    <worldbody>
+        <body name="battery_module" pos="0 0 0">
+            <!-- Main grey metal body -->
+            <geom name="battery_module_body" type="box" pos="0 0 0.05" size="0.15 0.10 0.05" rgba="0.6 0.6 0.6 1" mass="15.0" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Left handle (red) -->
+            <geom name="battery_module_handle_left" type="box" pos="-0.12 0 0.1" size="0.02 0.01 0.01" rgba="1 0 0 1" mass="0.2" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Right handle (black) -->
+            <geom name="battery_module_handle_right" type="box" pos="0.12 0 0.1" size="0.02 0.01 0.01" rgba="0 0 0 1" mass="0.2" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Joint to allow free movement -->
+            <joint name="battery_module_joint" type="free"/>
+        </body>
+    </worldbody>
+</mujoco>

@@ -44,7 +44,8 @@ class SimEnv:
         self.renderer = mj.Renderer(self._mj_model, self.image_res_h, self.image_res_w)
         self._mj_model.camera("robot-cam").fovy[0] = 45
 
-        self._ee_mj_data = self._mj_data.body('robot_1_ur5e/robot_1_adhesive gripper/')
+        self._ee_mj_data = self._mj_data.body('robot_0_ur5e/robot_0_adhesive gripper/')
+        #self._ee_mj_data = self._mj_data.body('rethink_mount_stationary/robot_0_ur5e/robot_0_adhesive gripper/')
         # self.dt = self._mj_model.opt.timestep * frame_skip
         # self._pid_controller = PIDController(kp, ki, kd, dt)
 
@@ -78,7 +79,7 @@ class SimEnv:
             self.robots_camera[agent] = [obs[agent]['camera'], obs[agent]['camera_pose']]
         self.gripper_state_closed = False
         self._grasp_manager.release_object()
-        self._object_manager.reset(randomize=randomize, battery_positions=battery_positions)
+        #self._object_manager.reset(randomize=randomize, battery_positions=battery_positions)################################
 
         self.step(self.robots_joint_pos, gripper_closed=False)
 

@@ -1,0 +1,19 @@
+<mujoco model="battery_D">
+    <worldbody>
+        <body name="battery_D" pos="0 0 0">
+            <!-- Main green body -->
+            <geom name="battery_body" type="cylinder" pos="0 0 0" size="0.0171 0.0275" rgba="0 1 0 1" mass="0.15" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Bottom grey cap -->
+            <geom name="battery_bottom_cap" type="cylinder" pos="0 0 -0.030" size="0.0171 0.0025" rgba="0.5 0.5 0.5 1" mass="0.02" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Top grey cap -->
+            <geom name="battery_top_cap" type="cylinder" pos="0 0 0.030" size="0.0171 0.0025" rgba="0.5 0.5 0.5 1" mass="0.02" friction="1 0.005 0.0001" condim="4"/>
+
+            <!-- Positive bump on top -->
+            <geom name="battery_positive_bump" type="cylinder" pos="0 0 0.0315" size="0.005 0.0015" rgba="0.5 0.5 0.5 1" mass="0.001" friction="1 0.005 0.0001" condim="4"/>
+
+            <joint name="battery_D_joint" type="free"/>
+        </body>
+    </worldbody>
+</mujoco>
