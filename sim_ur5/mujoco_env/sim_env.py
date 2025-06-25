@@ -10,6 +10,7 @@ from sim_ur5.mujoco_env.world_utils.grasp_manager import GraspManager
 from sim_ur5.mujoco_env.world_utils.configurations_and_constants import *
 from sim_ur5.utils.logging_util import setup_logging
 import logging
+import time
 
 
 class SimEnv:
@@ -235,6 +236,236 @@ class SimEnv:
 
     def get_agent_joint(self, agent_name):
         return self.robots_joint_pos[agent_name]
+    def update_object_position(self, object_name, new_position):
+        """
+        Update the position of a specific object and ensure it affects other objects in the simulation.
+
+        Args:
+            object_name: The name of the object to update (e.g., "plate").
+            new_position: A list [x, y, z] specifying the new position of the object.
+        """
+        # Get the object's current position
+        
+        
+        # Update the object's position
+        joint_id = self._mj_model.joint(object_name).id
+        pos_adrr = self._mj_model.jnt_qposadr[joint_id]
+        # print(f"Current position of {object_name}: {self._mj_data.qpos[pos_adrr:pos_adrr + 3]}")
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
+        # print(f"Updated position of {object_name}: {new_position}")
+
+        # Step the simulation to apply the changes
+        self.simulate_steps(10)
+        # print(f"Simulation updated with new position for {object_name}.")
+    def get_contacts(self, geom1_name, geom2_name):
+        """
+        Get the indices in the MuJoCo contacts database that match those of the given geoms, 
+        and the direction of contact (1 - geom1 to geom2; -1 - geom2 to geom1).
+
+        Args:
+            geom1_name: The name of the first geometry (string).
+            geom2_name: The name of the second geometry (string).
+
+        Returns:
+            contact_idx: A list of indices in the MuJoCo contacts database.
+            contact_dir: A list of directions for each contact (1 or -1).
+        """
+        # Retrieve geometry IDs using their names
+        geom1_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom1_name)
+        geom2_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom2_name)
+
+        state = self.get_state()
+        contact_idx = []
+        contact_dir = []
+
+        # Iterate through all contacts in the state
+        for i, (contact_id1, contact_id2) in enumerate(state['geom_contact'].geom):
+            if contact_id1 == geom1_id and contact_id2 == geom2_id:
+                contact_idx.append(i)
+                contact_dir.append(1)
+            elif contact_id2 == geom1_id and contact_id1 == geom2_id:
+                contact_idx.append(i)
+                contact_dir.append(-1)
+
+        return contact_idx, contact_dir
+    def get_force_on_geom(self, geom_name):
+        """
+        Get the average force applied on a specific geometry.
+
+        Args:
+            geom_name: The name of the geometry (string).
+
+        Returns:
+            A numpy array representing the average force applied on the geometry.
+        """
+        # Ensure the geom_name exists in the environment
+        geom_names = [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom_id) for geom_id in range(self._mj_model.ngeom)]
+        if geom_name not in geom_names:
+            raise ValueError(f"Geometry '{geom_name}' does not exist in the model.")
+
+        # Get the geometry ID
+        geom_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom_name)
+
+        # Get the state and contact data
+        state = self.get_state()
+        contacts = state['geom_contact']
+
+        # Collect forces for the specified geometry
+        contact_forces = []
+        for contact in contacts:
+            # Access geom1 and geom2 using indices or field names
+            geom1_id = contact[0]  # Assuming geom1 is the first field
+            geom2_id = contact[1]  # Assuming geom2 is the second field
+            print(f"Contact between geom1: {geom1_id} and geom2: {geom2_id}")
+            # Use .any() to handle array comparisons
+            if np.any(geom1_id == geom_id) or np.any(geom2_id == geom_id):
+                contact_forces.append(contact[2])  # Assuming force is the third field
+
+        # If no forces are found, return zero
+        if not contact_forces:
+            return np.array([0, 0, 0])
+
+        # Average all contact forces for one definite force
+        return np.mean(contact_forces, axis=0)
+
+    def get_normal_force(self, geom1, geom2):
+        """
+        Get the normal force applied by geom1 on geom2.
+
+        Args:
+            geom1: The first geometry (either a string or a geometry object with a 'name' attribute).
+            geom2: The second geometry (either a string or a geometry object with a 'name' attribute).
+
+        Returns:
+            A numpy array representing the average normal force applied by geom1 on geom2.
+        """
+        # Ensure the geom1 and geom2 exist in the environment
+        geom_names = [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom_id) for geom_id in range(self._mj_model.ngeom)]
+        # print(geom_names)
+
+        if geom1 not in geom_names or geom2 not in geom_names:
+            raise ValueError(f"Geometry '{geom1}' OR '{geom2}' does not exist in the model.")
+        # self.update_object_position("dish1_fj", [0.5, 0, 1])
+        self.simulate_steps(10)
+
+        # Get contacts and directions
+        geom_contacts, geom_contact_dirs = self.get_contacts(geom1, geom2)
+
+        if not geom_contacts:
+            return np.array([0, 0, 0])
+
+        state = self.get_state()
+        frame = state['geom_contact'].frame[geom_contacts]
+
+
+        # Normal force is index 0-2 of the force frame (Z-axis). Direction is always geom1 to geom2.
+        # See https://github.com/google-deepmind/mujoco/blob/main/include/mujoco/mjdata.h
+        all_contact_normals = frame.T[0:3]  # Transpose to enable referencing (x, y, z) at the top level
+        all_contact_normals = all_contact_normals * geom_contact_dirs  # Set direction according to args order
+
+        # Average all contact normals for one definite normal force
+        return all_contact_normals.mean(axis=1)
+    def valid_geometry_names(self):
+        """
+        Print all valid geometry names in the MuJoCo model.
+        """
+        state = self.get_state()
+        frame = state['geom_contact']
+
+        """ 
+        state = env.get_state()
+        geom1 = env._mj_model.geom('')  # Replace
+        """
+        print("Valid geometry names:")
+        model = self._mj_model
+        for geom_id in range(model.ngeom):
+            geom_name = mj.mj_id2name(model, mj.mjtObj.mjOBJ_GEOM, geom_id)
+            geom_pos = self._mj_model.geom(geom_name).pos
+            print(f"Geom ID {geom_id}: {geom_name},\n Position: {geom_pos}")
+        # for geom in self._mj_model:
+        #     print(geom)
+    def get_valid_geometry_names(self):
+        """
+        Return a list of all valid geometry names in the MuJoCo model.
+        """
+        return [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom_id) for geom_id in range(self._mj_model.ngeom)]
+    def is_stable_orientation(self, object_name: str, tolerance: float = 0.1) -> bool:
+        """
+        Checks if an object's orientation is stable based on its alignment with the upright Z-axis.
+
+        Args:
+            object_name: The name of the object to check.
+            tolerance: The allowable deviation from the upright orientation (default is 0.1 radians).
+
+        Returns:
+            True if the object's orientation is stable, False otherwise.
+        """
+        # Get the object's orientation as a quaternion
+        rotation_matrix = self._mj_data.body(object_name).xmat.reshape(3, 3)
+    
+        # Local Z-axis in world frame
+        local_z = rotation_matrix[:, 2]
+        
+        # Angle between local Z and world Z
+        cos_theta = np.dot(local_z, np.array([0, 0, 1]))
+        angle_rad = np.arccos(np.clip(cos_theta, -1.0, 1.0))
+        angle_deg = np.degrees(angle_rad)
+        print(f"Angle between local Z and world Z for {object_name}: {angle_deg} degrees")
+        return angle_deg < tolerance
+    def place_object_in_charger(self, object_name, new_position):
+        """
+        Update the position and rotation of an object in the charger to make it upright.
+
+        Args:
+            object_name: The name of the object to update.
+            new_position: A list [x, y, z] specifying the new position.
+        """
+        if object_name.startswith('spoon/'):
+           new_rotation_euler = [0, 0, 1.57079632679]
+        else:
+           new_rotation_euler = [0, 0, -1.57079632679]
+
+        # Convert Euler angles to quaternion
+        new_rotation_quat = R.from_euler('xyz', new_rotation_euler).as_quat()
+
+        # Get the object's current position and rotation
+        joint_id = self._mj_model.joint(object_name).id
+        pos_adrr = self._mj_model.jnt_qposadr[joint_id]
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = [0, 0.9, 0.5]  # Reset position to origin for simplicity
+
+        # Step the simulation to apply the changes
+        self.simulate_steps(10)
+        
+          # Sleep for 30 seconds
+
+        # Update the object's rotation
+        rot_adrr = pos_adrr + 3  # Rotation values start after position
+        self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
+        self.simulate_steps(10)
+
+        time.sleep(3)
+        
+
+        # Update the object's position
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
+
+        # Step the simulation to apply the changes
+        self.simulate_steps(10)
+        time.sleep(7)
+
+    def print_all_joint_names(self):
+        """
+        Print all joint names in the MuJoCo model.
+        """
+        print("Valid joint names:")
+        for joint_id in range(self._mj_model.njnt):
+            joint_name = mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_id)
+            print(f"Joint ID {joint_id}: {joint_name}")
+    def get_all_joint_names(self):
+        """
+        Return a list of all joint names in the MuJoCo model.
+        """
+        return [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_id) for joint_id in range(self._mj_model.njnt)]
 
 
 def convert_mj_struct_to_namedtuple(mj_struct):

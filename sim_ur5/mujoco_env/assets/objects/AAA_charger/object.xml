@@ -1,4 +1,4 @@
-<mujoco model="battery_aaa_tray_charger">
+<mujoco model="AAA_tray_charger">
     <worldbody>
         <body name="charger_AAA_tray" pos="0 0 0">
 
