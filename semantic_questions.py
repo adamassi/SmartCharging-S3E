@@ -10,23 +10,25 @@ def is_charged(battery, sim_env):
     return battery in sim_env.get_object_manager().charged_batteries
 
 
-def is_compatible_with(charger, battery, sim_env):
+def is_compatible_with(charger: str, battery):
     """
     Returns True if the charger is compatible with the battery.
     :param charger: Name of the charger object
     :param battery: Name of the battery object
     :param sim_env: Simulation environment instance
     """
-    compatibility = {
-        'battery_AA': ['charger_AA_1', 'charger_AA_2'],
-        'battery_AAA': ['charger_AAA_1'],
-        'battery_C': ['charger_C_1'],
-        'battery_D': ['charger_D_1']
-    }
-    for battery_type in compatibility:
-        if battery.startswith(battery_type):
-            return charger in compatibility[battery_type]
-    return False
+    
+    
+     
+    charger_type = charger.split("_")[1].strip("/")
+    # print(charger_type)  # Output: AA
+    return charger_type == battery.battery_type
+    
+
+    # for battery_type in compatibility:
+    #     if battery.startswith(battery_type):
+    #         return charger in compatibility[battery_type]
+    # return False
 
 
 def is_damaged(battery, sim_env):
