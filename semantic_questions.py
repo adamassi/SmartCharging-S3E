@@ -1,20 +1,20 @@
 # semantic_questions.py
 
-def is_charged(battery, sim_env):
+def is_charged(battery):
     """
     Returns True if the battery is charged.
     :param battery: Name of the battery object
     :param sim_env: Simulation environment instance
     """
     # Replace this logic with your own charge detection method
-    return battery in sim_env.get_object_manager().charged_batteries
+    return battery.charge_percent > 60.0
 
 
 def is_compatible_with(charger: str, battery):
     """
     Returns True if the charger is compatible with the battery.
     :param charger: Name of the charger object
-    :param battery: Name of the battery object
+    :param battery: class of the battery object
     :param sim_env: Simulation environment instance
     """
     
@@ -31,13 +31,12 @@ def is_compatible_with(charger: str, battery):
     # return False
 
 
-def is_damaged(battery, sim_env):
+def is_damaged(battery):
     """
     Returns True if the battery is physically damaged.
-    :param battery: Name of the battery object
-    :param sim_env: Simulation environment instance
+    :param battery: class of the battery object
     """
-    return battery in sim_env.get_object_manager().damaged_batteries
+    return battery.is_damaged 
 
 
 def should_be_discarded(battery, sim_env):

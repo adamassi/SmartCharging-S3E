@@ -16,16 +16,21 @@ class Battery:
         self.battery_type = self._extract_battery_type(name)
         self.charge_percent = max(0.0, min(initial_charge, 100.0))
         self.charging_rate = charging_rate
+        self.creation_time = time.time()  # 🆕 Battery creation time
 
         self.is_charging = False
         self.charge_start_time = None
         self.charge_end_time = None
+        self.is_damaged = False  
 
     def _extract_battery_type(self, name: str) -> str:
         """
         Extracts the battery type from the name.
-        Example: 'battery_AAA' -> 'AAA'
+        Example: 'battery_AAA/user_joint_1/' -> 'AAA'
         """
+        # Remove everything after the first '/'
+        name = name.split('/')[0]
+
         if "battery_" in name.lower():
             parts = name.split("_")
             if len(parts) > 1:
