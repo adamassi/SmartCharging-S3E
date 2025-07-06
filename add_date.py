@@ -3,18 +3,17 @@ from datetime import datetime
 
 def add_date_to_image(image_path, output_path, font_path="arial.ttf", font_size=15):
     """
-    Adds the current date to the bottom-right corner of an image and saves it.
+    Adds the current date to the center of an image and saves it.
 
     :param image_path: Path to the input image file.
     :param output_path: Path to save the output image file.
     :param font_path: Path to the font file (default is 'arial.ttf').
     :param font_size: Font size for the date text (default is 20).
     """
-    # Load the original image
-    original_image = Image.open(image_path)  # Copy the original image
+    # Load the original image and duplicate
+    original_image = Image.open(image_path)
     original_image.save("copy.png")
-    original_image = Image.open("copy.png")
-    image = original_image.copy().convert("RGBA")  # Convert the copied image to RGBA
+    image = Image.open("copy.png").copy().convert("RGBA")
 
     # Get the current date
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -28,20 +27,17 @@ def add_date_to_image(image_path, output_path, font_path="arial.ttf", font_size=
     except IOError:
         font = ImageFont.load_default()
 
-    # Calculate text position (bottom-right corner with padding)
-    text = current_date
-    bbox = draw.textbbox((0, 0), text, font=font)
+    # Calculate text position (center)
+    bbox = draw.textbbox((0, 0), current_date, font=font)
     text_width, text_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    padding = 10
-    x = image.width - text_width - padding
-    y = image.height - text_height - padding
+    x = (image.width - text_width) // 2
+    y = (image.height - text_height) // 2
 
     # Draw the text onto the image
-    draw.text((x, y), text, fill="black", font=font)
+    draw.text((x, y), current_date, fill="black", font=font)
 
-    # Save the new image
+    # Save the image
     image.save(output_path, format="PNG")
 
-# Example usage
-add_date_to_image("battery_texture_upgraded.png", r"sim_ur5/mujoco_env/assets/objects/battery_AA/dated_image.png")
-# add_date_to_image("battery_texture_upgraded.png", "dated_image.png")
+# Example usage:
+add_date_to_image("battery_texture_upgraded.png", "sim_ur5/mujoco_env/assets/objects/battery_AA/dated_image.png")
