@@ -7,7 +7,7 @@ scene = SceneSpec(
     'clairlab',
     objects=(
         ObjectSpec('bin_dark_wood', base_pos=[0.2, -0.3, 0]),
-        # ObjectSpec('milk', base_pos=[0.2, -0.3, 0.1], base_joints=(JointSpec('free'),)),
+        ObjectSpec('milk', base_pos=[0.2, -0.3, 0.1], base_joints=(JointSpec('free'),)),
 
         # ObjectSpec('battery_2', base_pos=[0, 0.2, 0.1], base_joints=(JointSpec('free'),)),
         # ObjectSpec('battery_3', base_pos=[0, 0.3, 0.1], base_joints=(JointSpec('free'),)),

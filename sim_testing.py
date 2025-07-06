@@ -6,11 +6,7 @@ from sim_ur5.mujoco_env.common.ur5e_fk import forward
 import datetime
 
 
-today_date = datetime.datetime.today().strftime('%Y-%m-%d')
 
-
-with open('battery_texture.png', 'wb') as file:
-    file.write(today_date.encode('utf-8'))
 
 env = SimEnv()
 
@@ -24,7 +20,7 @@ workspace_y_lims = [-1.0, -0.55]
 executor = MotionExecutor(env)
 print("waiting for 1 second")
 start_time = time.time()
-while time.time() - start_time < 100:
+while time.time() - start_time < 60:
         pass  # wait for 5 seconds to let the simulation start
 # Add batterys to the world
 #env.reset(randomize=False, battery_positions=battery_position)
