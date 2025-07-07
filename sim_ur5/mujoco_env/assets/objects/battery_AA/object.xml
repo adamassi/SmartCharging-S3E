@@ -1,8 +1,8 @@
 <mujoco model="battery_AA">
     <asset>
         <!-- Texture definition -->
-        <texture name="battery_texture" type="2d" file="dated_image3.png" />
-        <material name="battery_material" texture="battery_texture" texrepeat="1 1" texuniform="true" />
+        <texture name="battery_texture" type="2d" file="dated_image.png" />
+        <material name="battery_material" texture="battery_texture" texrepeat="1 3" texuniform="true" />
     </asset>
 
     <worldbody>
