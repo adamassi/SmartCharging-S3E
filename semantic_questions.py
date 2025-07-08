@@ -52,6 +52,7 @@ class SmartChargingSemantic:
         charger_geom = f"{battery.battery_type}_charger/bottom"
         print(charger_geom)
         print(f"the force on the charger geom {charger_geom} is:{self.sim_env.get_force_on_geom(charger_geom)} ")
+        print(f"the force on the charger geom AA_charger/bottom_right is:{self.sim_env.get_force_on_geom('AA_charger/bottom_right')} ")
 
 
 
