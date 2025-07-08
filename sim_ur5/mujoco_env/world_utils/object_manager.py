@@ -107,10 +107,10 @@ class ObjectManager:
             battery_id: the id of the battery to set the position of.
             position: the position to set the battery to, position will be in format [x, y ,z].
         """
-        joint_name = f"battery{battery_id}_fj"
-        joint_id = self._mj_model.joint(joint_name).id
-        pos_adrr = self._mj_model.jnt_qposadr[joint_id]
-        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = position
+        # joint_name = f"battery{battery_id}_fj"
+        # joint_id = self._mj_model.joint(joint_name).id
+        # pos_adrr = self._mj_model.jnt_qposadr[joint_id]
+        # self._mj_data.qpos[pos_adrr:pos_adrr + 3] = position
 
     def set_all_battery_positions(self, positions):
         """

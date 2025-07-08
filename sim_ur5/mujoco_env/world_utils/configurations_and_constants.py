@@ -6,8 +6,8 @@ from sim_ur5.mujoco_env.episode import *
 scene = SceneSpec(
     'clairlab',
     objects=(
-        ObjectSpec('bin_dark_wood', base_pos=[0.2, -0.3, 0]),
-        ObjectSpec('milk', base_pos=[0.2, -0.3, 0.1], base_joints=(JointSpec('free'),)),
+        # ObjectSpec('bin_dark_wood', base_pos=[0.2, -0.3, 0]),
+        # ObjectSpec('milk', base_pos=[0.2, -0.3, 0.1], base_joints=(JointSpec('free'),)),
 
         # ObjectSpec('battery_2', base_pos=[0, 0.2, 0.1], base_joints=(JointSpec('free'),)),
         # ObjectSpec('battery_3', base_pos=[0, 0.3, 0.1], base_joints=(JointSpec('free'),)),
@@ -17,16 +17,16 @@ scene = SceneSpec(
         # ObjectSpec('battery_D', base_pos=[0.4, 0.3, 0.1], base_joints=(JointSpec('free'),)),
         # ObjectSpec('battery_module', base_pos=[0.7, 0.0, 0.1], base_joints=(JointSpec('free'),)),
         
-        ObjectSpec('battery_AA', base_pos=[0.2, 0, 0.07]),
-        ObjectSpec('AA_charger', base_pos=[0.2, 0, 0.02], base_joints=(JointSpec('free'),)),
+        ObjectSpec('battery_AA', base_pos=[-0.6, -0.7, 0.07]),
+        ObjectSpec('AA_charger', base_pos=[-0.6, -0.7, 0.02], base_joints=(JointSpec('free'),)),
 
-        ObjectSpec('battery_AAA', base_pos=[0.3, 0, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
-        ObjectSpec('AAA_charger', base_pos=[0.3, 0, 0.02], base_joints=(JointSpec('free'),)),
+        ObjectSpec('battery_AAA', base_pos=[-0.7, -0.7, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.7, 0.02], base_joints=(JointSpec('free'),)),
 
-        ObjectSpec('battery_C', base_pos=[0.4, 0, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('battery_C', base_pos=[4, 0, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
         # ObjectSpec('battery_C_charger', base_pos=[0.4, 0, 0.05], base_joints=(JointSpec('free'),)),
         
-        ObjectSpec('battery_D', base_pos=[0.5, 0, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('battery_D', base_pos=[5, 0, 0.07], base_joints=(JointSpec('free'),), base_rot=[0, 1.57079632679, 0]),
         # ObjectSpec('battery_D_charger', base_pos=[0.5, 0, 0.05], base_joints=(JointSpec('free'),)),
 
 
