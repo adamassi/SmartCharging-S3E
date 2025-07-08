@@ -21,6 +21,7 @@ battery_C/user_joint_9/
 battery_D/user_joint_11/
 """
 
+
 # Create Battery instances for joints containing "battery" in their name
 batteries = {}
 for joint_name in joint_names:

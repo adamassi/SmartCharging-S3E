@@ -1,6 +1,6 @@
-<mujoco model="AAA_tray_charger">
+<mujoco model="AAA_charger">
     <worldbody>
-        <body name="charger_AAA_tray" pos="0 0 0">
+        <body name="charger_AAA" pos="0 0 0">
 
             <!-- Back wall -->
             <geom name="back_wall" type="box" pos="0 0.012 0.020" size="0.030 0.004 0.020" rgba="0.5 0.5 0.5 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/>

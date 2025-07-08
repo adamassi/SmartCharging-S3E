@@ -133,8 +133,8 @@ class SimEnv:
                  # "robots_camera": self.robots_camera,
                  "gripper_state_closed": self.gripper_state_closed,
                  # "object_positions": object_positions,
-                 "grasped_object": self._grasp_manager.attached_object_name,}
-                 # "geom_contact": convert_mj_struct_to_namedtuple(self._env.sim.data.contact)}
+                 "grasped_object": self._grasp_manager.attached_object_name,
+                 "geom_contact": convert_mj_struct_to_namedtuple(self._env.sim.data.contact)}
 
         return deepcopy(state)
 
