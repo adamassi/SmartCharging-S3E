@@ -13,7 +13,7 @@
             <!-- <geom name="bottom_right" type="box" pos="0.022 0 0.002" size="0.006 0.008 0.002" rgba="0.5 0.5 0.5 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/> -->
 
             <!-- Right wall -->
-            <geom name="right_wall" type="box" pos="0.0255 0 0.010" size="0.0005 0.008 0.006" 
+            <geom name="right_wall" type="box" pos="0.0225 0 0.010" size="0.0005 0.008 0.006" 
                   rgba="1 0 0 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/>
             <!-- Color: Red -->
 
@@ -26,7 +26,7 @@
             <!-- <geom name="bottom_left" type="box" pos="-0.022 0 0.002" size="0.006 0.008 0.002" rgba="0.5 0.5 0.5 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/> -->
 
             <!-- Left wall -->
-            <geom name="left_wall" type="box" pos="-0.0255 0 0.010" size="0.0005 0.008 0.006" 
+            <geom name="left_wall" type="box" pos="-0.0225 0 0.010" size="0.0005 0.008 0.006" 
                   rgba="0 0 0 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/>
             <!-- Color: Black -->
 
