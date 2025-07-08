@@ -313,6 +313,7 @@ class SimEnv:
         # Collect forces for the specified geometry
         contact_forces = []
         for contact in contacts:
+            print(f'Contact: {contact}')
             # Access geom1 and geom2 using indices or field names
             geom1_id = contact[0]  # Assuming geom1 is the first field
             geom2_id = contact[1]  # Assuming geom2 is the second field
