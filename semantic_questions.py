@@ -48,7 +48,10 @@ class SmartChargingSemantic:
         :param battery: Battery class instance
         """
         self.sim_env.valid_geometry_names()
-        
+        geoms_names =self.sim_env.get_valid_geometry_names()
+        charger_geom = f"{battery.battery_type}_charger/bottom"
+        print(charger_geom)
+        print(f"the force on the charger geom {charger_geom} is:{self.sim_env.get_force_on_geom(charger_geom)} ")
 
 
 

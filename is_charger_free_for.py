@@ -21,6 +21,7 @@ workspace_y_lims = [-1.0, -0.55]
 
 executor = MotionExecutor(env)
 joint_names = env.get_all_joint_names()
+executor.wait(1000)  # Wait for the simulation to be ready
 """
 battery_AA/user_joint_1/
 battery_aa_tray_charger/user_joint_3/
@@ -39,14 +40,30 @@ for joint_name in joint_names:
         print(f"Created Battery instance for joint: {joint_name}")
 
 start_time = time.time()
-while time.time() - start_time < 50:
+while time.time() - start_time < 5:
         pass  # wait for 5 seconds to let the simulation start
 semantic = SmartChargingSemantic(env)
 
-semantic.is_charger_free_for(batteries['battery_AAA/user_joint_6/'])
+semantic.is_charger_free_for(batteries['battery_AAA/user_joint_3/'])
 
-gemo2='AAA_charger/bottom_right'
+gemo2='table2_top'
 
+print(f"Force on {gemo2}: ")
+
+force_on_gemo = env.get_force_on_geom(gemo2)
+print(f"Force on {gemo2}: {force_on_gemo}")
+
+gemo2='AAA_charger/bottom'
+gemo2='AA_charger/bottom_left'
+
+
+force_on_gemo = env.get_force_on_geom(gemo2)
+print(f"Force on {gemo2}: {force_on_gemo}")
+
+
+# gemo2='table1_top'
+
+gemo2='AAA_charger/bottom'
 
 
 force_on_gemo = env.get_force_on_geom(gemo2)
