@@ -33,6 +33,11 @@ class JointSpec(Spec):
 
         if 'name' not in self.attrs:
             self.attrs['name'] = f'user_joint_{self.id}'
+        # else:
+            # extract first part of self.attrs['name'] after -
+            
+            # self.attrs['name'] = self.attrs['name'].split('-')[0] 
+            # self.attrs['name'] = f'-{self.attrs["name"]}'
 
         # set the actuators to a tuple of ActuatorSpecs
         super().__setattr__('actuators', set_iterable_arg(ActuatorSpec, self.actuators))

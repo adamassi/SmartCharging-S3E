@@ -1,4 +1,5 @@
 # semantic_questions.py
+import numpy as np
 
 class SmartChargingSemantic:
     def __init__(self, sim_env):
@@ -29,30 +30,35 @@ class SmartChargingSemantic:
         Returns True if the battery is physically damaged.
         :param battery: Battery class instance
         """
-        return battery.is_damaged
+        return self.sim_env.check_is(battery.name)
 
     def should_be_discarded(self, battery):
         """
-        Returns True if the battery is damaged or not compatible with any charger.
+        Returns True if the battery is damaged .
         :param battery: Battery class instance
         """
         if self.is_damaged(battery):
             return True
-
-        chargers = self.sim_env.get_object_manager().get_all_charger_names()
-        return not any(self.is_compatible_with(charger, battery) for charger in chargers)
+        return False
 
     def is_charger_free_for(self, battery):
         """
         Returns True if the charger that matches the battery's type is currently free (no battery inside).
         :param battery: Battery class instance
         """
-        self.sim_env.valid_geometry_names()
-        geoms_names =self.sim_env.get_valid_geometry_names()
+        geoms_names = self.sim_env.get_valid_geometry_names()
+        # keep only names that do not contain table
+        geoms_names = [geom for geom in geoms_names if "table" not in geom]
         charger_geom = f"{battery.battery_type}_charger/bottom"
-        print(charger_geom)
-        print(f"the force on the charger geom {charger_geom} is:{self.sim_env.get_force_on_geom(charger_geom)} ")
-        print(f"the force on the charger geom AA_charger/bottom_right is:{self.sim_env.get_force_on_geom('AA_charger/bottom_right')} ")
-
+        for geom in geoms_names:
+            # print(geom)
+            normal_force = self.sim_env.get_normal_force(charger_geom,geom)
+            # print(normal_force)
+            # Compare normal_force with np.array([0, 0, 0])
+            if not np.array_equal(normal_force, np.array([0, 0, 0])):
+                # if  normal_force[2] > 0.9:
+                    print(f"Normal force on {geom}: {normal_force}")
+                    return False
+        return True
 
 

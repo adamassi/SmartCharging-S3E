@@ -10,19 +10,19 @@
             <!-- Main green body with texture -->
             <geom name="battery_body" type="cylinder" pos="0 0 0" size="0.00525 0.0195"
                   material="battery_material"
-                  mass="0.012" friction="1 0.005 0.0001" condim="4"/>
+                  mass="0.012" friction="1 0.8 0.6" condim="4"/>
 
             <!-- Bottom grey cap -->
             <geom name="battery_bottom_cap" type="cylinder" pos="0 0 -0.02075" size="0.00525 0.00125"
-                  rgba="0.5 0.5 0.5 1" mass="0.002" friction="1 0.005 0.0001" condim="4"/>
+                  rgba="0.5 0.5 0.5 1" mass="0.002" friction="1 0.8 0.6" condim="4"/>
 
             <!-- Top grey cap -->
             <geom name="battery_top_cap" type="cylinder" pos="0 0 0.02075" size="0.00525 0.00125"
-                  rgba="0.5 0.5 0.5 1" mass="0.002" friction="1 0.005 0.0001" condim="4"/>
+                  rgba="0.5 0.5 0.5 1" mass="0.002" friction="1 0.8 0.6" condim="4"/>
 
             <!-- Positive bump on top -->
             <geom name="battery_positive_bump" type="cylinder" pos="0 0 0.02225" size="0.002 0.00025"
-                  rgba="0.5 0.5 0.5 1" mass="0.0005" friction="1 0.005 0.0001" condim="4"/>
+                  rgba="0.5 0.5 0.5 1" mass="0.0005" friction="1 0.8 0.6" condim="4"/>
 
             <joint name="battery_AAA_joint" type="free"/>
         </body>

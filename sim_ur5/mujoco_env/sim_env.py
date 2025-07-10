@@ -3,7 +3,8 @@ from copy import deepcopy, copy
 from collections import namedtuple
 import mujoco as mj
 import scipy
-from mujoco import MjvCamera
+from mujoco import MjvCamera, mjtFont
+# from mujoco.mjbindings.functions import mjv_addText  # Commented out as it cannot be resolved
 from sim_ur5.mujoco_env import MujocoEnv
 from sim_ur5.mujoco_env.world_utils.object_manager import ObjectManager
 from sim_ur5.mujoco_env.world_utils.grasp_manager import GraspManager
@@ -331,6 +332,7 @@ class SimEnv:
 
     def get_normal_force(self, geom1, geom2):
         """
+        **better not use or to delete**
         Get the normal force applied by geom1 on geom2.
 
         Args:
@@ -386,7 +388,7 @@ class SimEnv:
         # for geom in self._mj_model:
         #     print(geom)
     def get_valid_geometry_names(self):
-        """
+        """ 
         Return a list of all valid geometry names in the MuJoCo model.
         """
         return [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_GEOM, geom_id) for geom_id in range(self._mj_model.ngeom)]
@@ -467,7 +469,66 @@ class SimEnv:
         Return a list of all joint names in the MuJoCo model.
         """
         return [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_id) for joint_id in range(self._mj_model.njnt)]
+    def render_with_timer(self):
+        """
+        Render the simulation with a timer overlay showing the simulation time using MuJoCo's native rendering window.
+        """
+        sim_time = self._mj_data.time
 
+        # Add the simulation time as an overlay using MuJoCo's native rendering
+        mj.mjr_overlay(
+            mj.mjtFontScale.mjFONTSCALE_150,  # Font scale
+            mj.mjtGridPos.mjGRID_TOPLEFT,     # Position on the screen
+            self.renderer.con,                # MuJoCo context
+            f"Time: {sim_time:.2f}s",         # Text to display
+            None,                             # Additional text (optional)
+            self.renderer.viewport            # Viewport for rendering
+        )
+
+        # Update the scene and render it
+        self.renderer.update_scene(self._mj_data, "robot-cam")
+        self.renderer.render()
+
+    def add_object_and_reset(self, object_name, base_pos, base_rot=None):
+        """
+        **not tested yet**
+        Add an object to the scene spec and reinitialize the simulation.
+        NOTE: This recreates the whole environment.
+        """
+        # Ensure env is properly closed if it exists
+        if hasattr(self, '_env') and self._env is not None:
+            self.close()
+
+        # Make a copy of the default scene
+        new_scene_objects = list(scene.objects)
+
+        # Define the new object
+        new_object = ObjectSpec(
+            object_name,
+            base_pos=base_pos,
+            base_joints=(JointSpec('free'),),
+            base_rot=base_rot or [0, 0, 0]
+        )
+
+        # Append new object
+        new_scene_objects.append(new_object)
+
+        # Create new scene spec
+        new_scene = scene.__class__(
+            scene.resource,
+            objects=tuple(new_scene_objects),
+            render_camera=scene.render_camera,
+            init_keyframe=scene.init_keyframe
+        )
+
+        # Create new config based on muj_env_config
+        new_cfg = deepcopy(muj_env_config)
+        new_cfg['scene'] = new_scene
+
+        # Reinitialize the environment
+        self.__init__(cfg=new_cfg, render_mode=self.render_mode)
+
+        print(f"✅ Added object {object_name} at position {base_pos} and reset simulation.")
 
 def convert_mj_struct_to_namedtuple(mj_struct):
     """
@@ -475,4 +536,6 @@ def convert_mj_struct_to_namedtuple(mj_struct):
     """
     attrs = [attr for attr in dir(mj_struct) if not attr.startswith('__') and not callable(getattr(mj_struct, attr))]
     return namedtuple(mj_struct.__class__.__name__, attrs)(**{attr: getattr(mj_struct, attr) for attr in attrs})
+
+
 

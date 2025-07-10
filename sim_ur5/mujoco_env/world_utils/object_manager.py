@@ -27,14 +27,14 @@ class ObjectManager:
         Args:
             randomize: if True, randomize the positions of the batterys, otherwise set them to initial positions.
         """
-        print("resetting object positionsAAAAAAAAAAAAAAAAAAAAAAAAA")
+        # print("resetting object positionsAAAAAAAAAAAAAAAAAAAAAAAAA")
         # orint the battery positions
-        print(f"battery_positions: {battery_positions}")
+        # print(f"battery_positions: {battery_positions}")
         def check_battery_collision(new_pos):
             """Tests if new position for battery collides with any other battery"""
             for pos in battery_positions:
-                print("checking collisionBBBBBBBBBBBBBBBBBBB")
-                print(f"new_pos: {new_pos}, pos: {pos}")
+                # print("checking collisionBBBBBBBBBBBBBBBBBBB")
+                # print(f"new_pos: {new_pos}, pos: {pos}")
                 pos_np = np.array(pos)
                 if np.linalg.norm(new_pos - pos_np) < 2 * self.battery_size:
                     return True
@@ -42,7 +42,7 @@ class ObjectManager:
             return False
 
         if randomize:
-            print("randomizing battery positionsCCCCCCCCCCCCCCCCC")
+            # print("randomizing battery positionsCCCCCCCCCCCCCCCCC")
             # randomize battery positions
             battery_positions = []
             for _ in range(len(self.object_names)):
