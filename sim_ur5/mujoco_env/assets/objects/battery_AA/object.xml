@@ -24,7 +24,7 @@
             <geom name="battery_positive_bump" type="cylinder" pos="0 0 0.02525" size="0.0025 0.00025"
                   rgba="0.5 0.5 0.5 1" mass="0.001" friction="1 0.005 0.0001" condim="4"/>
 
-            <joint name="battery_AA_joint" type="free"/>
+            <!-- <joint name="battery_AA_joint" type="free"/> -->
         </body>
     </worldbody>
 </mujoco>

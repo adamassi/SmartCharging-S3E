@@ -15,6 +15,7 @@ class ObjectManager:
 
         # all bodies that ends with "box"
         self.object_names = [name for name in all_joint_names if name.startswith("battery")]
+        print(f"ObjectManager: found {len(self.object_names)} objects: {self.object_names}")
         self.objects_mjdata_dict = {name: self._mj_model.joint(name) for name in self.object_names}
         self.initial_positions_dict = self.get_all_battery_positions()
         self.workspace_x_lims = [-0.9, -0.54]
@@ -121,3 +122,28 @@ class ObjectManager:
         # set batterys positions
         for i, pos in enumerate(positions):
             self.set_battery_position(i, pos)
+
+    # def rename_object(self, old_name: str, new_name: str):
+    #     """
+    #   Rename an object in the simulation.not implemented yet
+    #     Rename an object in the simulation.
+    #     Args:
+    #         old_name: The current name of the object.
+    #         new_name: The new name for the object.
+    #     """
+    #     if old_name not in self.object_names:
+    #         raise ValueError(f"Object '{old_name}' does not exist in the simulation.")
+
+    #     # Update the name in the object_names list
+    #     self.object_names.remove(old_name)
+    #     self.object_names.append(new_name)
+
+    #     # Update the key in the objects_mjdata_dict
+    #     self.objects_mjdata_dict[new_name] = self.objects_mjdata_dict.pop(old_name)
+
+    #     # Update the name in the MuJoCo model (if applicable)
+    #     joint = self._mj_model.joint(old_name)
+    #     print(joint)
+    #     joint.name = new_name
+
+    #     print(f"✅ Renamed object '{old_name}' to '{new_name}'.")

@@ -27,6 +27,7 @@ class SimEnv:
         self.robots_joint_pos = {}
         self.robots_joint_velocities = {}
         self.robots_force = {}
+        self.object_timers ={}
         self.robots_camera = {}
         for agent in self._env_entities.keys():
             self.robots_joint_pos[agent] = np.zeros((1, 6))  # will be updated in reset
@@ -291,6 +292,7 @@ class SimEnv:
         return contact_idx, contact_dir
     def get_force_on_geom(self, geom_name):
         """
+        **better not use or to delete** did not work as expected
         Get the average force applied on a specific geometry.
 
         Args:
@@ -332,7 +334,6 @@ class SimEnv:
 
     def get_normal_force(self, geom1, geom2):
         """
-        **better not use or to delete**
         Get the normal force applied by geom1 on geom2.
 
         Args:
@@ -469,26 +470,7 @@ class SimEnv:
         Return a list of all joint names in the MuJoCo model.
         """
         return [mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_id) for joint_id in range(self._mj_model.njnt)]
-    def render_with_timer(self):
-        """
-        Render the simulation with a timer overlay showing the simulation time using MuJoCo's native rendering window.
-        """
-        sim_time = self._mj_data.time
-
-        # Add the simulation time as an overlay using MuJoCo's native rendering
-        mj.mjr_overlay(
-            mj.mjtFontScale.mjFONTSCALE_150,  # Font scale
-            mj.mjtGridPos.mjGRID_TOPLEFT,     # Position on the screen
-            self.renderer.con,                # MuJoCo context
-            f"Time: {sim_time:.2f}s",         # Text to display
-            None,                             # Additional text (optional)
-            self.renderer.viewport            # Viewport for rendering
-        )
-
-        # Update the scene and render it
-        self.renderer.update_scene(self._mj_data, "robot-cam")
-        self.renderer.render()
-
+    
     def add_object_and_reset(self, object_name, base_pos, base_rot=None):
         """
         **not tested yet**
@@ -507,7 +489,7 @@ class SimEnv:
             object_name,
             base_pos=base_pos,
             base_joints=(JointSpec('free'),),
-            base_rot=base_rot or [0, 0, 0]
+            base_rot=base_rot or [-1, -1, 0]
         )
 
         # Append new object
@@ -529,6 +511,27 @@ class SimEnv:
         self.__init__(cfg=new_cfg, render_mode=self.render_mode)
 
         print(f"✅ Added object {object_name} at position {base_pos} and reset simulation.")
+
+    def change_battery_color(self, battery_geom_name, rgba):
+        """
+        Change the color of a battery's body.
+
+        Args:
+            battery_geom_name (str): The name of the geometry representing the battery body, e.g., 'battery_body'.
+            rgba (list or tuple): New RGBA color values, e.g., [1, 0, 0, 1] for solid red.
+        """
+        
+        # Find the geometry ID for the given geom name
+        geom_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_GEOM, battery_geom_name)
+        if geom_id == -1:
+            raise ValueError(f"Geometry '{battery_geom_name}' not found in the model.")
+
+        # Set the RGBA color
+        self._mj_model.geom_rgba[geom_id] = rgba
+
+        # Force a render update if in human render mode
+        if self.render_mode == "human":
+            self._env.render()
 
 def convert_mj_struct_to_namedtuple(mj_struct):
     """

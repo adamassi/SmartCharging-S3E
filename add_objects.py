@@ -6,6 +6,7 @@ from sim_ur5.mujoco_env.common.ur5e_fk import forward
 import datetime
 from battery_class import *
 from semantic_questions import SmartChargingSemantic
+import sim_ur5.motion_planning.simulation_motion_planner
 
 
 
@@ -47,7 +48,7 @@ while time.time() - start_time < 5:
 semantic = SmartChargingSemantic(env)
 
 
-env.add_object_and_reset('battery_AA', [-0.6, -0.8, 0.13])
+# env.add_object_and_reset('battery_AA', [-0.6, -0.8, 0.13])
 """
 executor.plan_and_move_to_xyz_facing_down("ur5e_2", [-0.7, -0.6, 0.15])
 """

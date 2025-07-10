@@ -24,13 +24,13 @@ scene = SceneSpec(
         ObjectSpec('battery_AA', base_pos=[0.3, 0.0, 0.07],base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),),),
         ObjectSpec('AA_charger', base_pos=[0.3, 0.0, 0.02]),
 
-        ObjectSpec('battery_AAA', base_pos=[-0.7, -0.7, 0.07], base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('battery_AAA', base_pos=[-0.7, -0.7, 0.07], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),), base_rot=[0, 1.57079632679, 0]),
         ObjectSpec('AAA_charger', base_pos=[-0.7, -0.7, 0.02]),
 
-        ObjectSpec('battery_C', base_pos=[0.8, -0.7, 0.07], base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('battery_C', base_pos=[-0.8, -0.7, 0.07], base_rot=[0, 1.57079632679, 0],base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
         # ObjectSpec('battery_C_charger', base_pos=[0.4, 0, 0.05], base_joints=(JointSpec('free'),)),
         
-        ObjectSpec('battery_D', base_pos=[5, 0, 0.07], base_rot=[0, 1.57079632679, 0]),
+        ObjectSpec('battery_D', base_pos=[-0.5, -0.5, 0.07], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
         # ObjectSpec('battery_D_charger', base_pos=[0.5, 0, 0.05], base_joints=(JointSpec('free'),)),
 
 
