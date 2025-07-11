@@ -3,7 +3,6 @@ from math import pi
 from sim_ur5.motion_planning.motion_executor import MotionExecutor
 import time
 from sim_ur5.mujoco_env.common.ur5e_fk import forward
-import datetime
 from battery_class import *
 from semantic_questions import SmartChargingSemantic
 
@@ -23,7 +22,7 @@ workspace_y_lims = [-1.0, -0.55]
 executor = MotionExecutor(env)
 joint_names = env.get_all_joint_names()
 print(joint_names)
-executor.wait(30)  # Wait for the simulation to be ready
+# executor.wait(30)  # Wait for the simulation to be ready
 """
 battery_AA/user_joint_1/
 battery_aa_tray_charger/user_joint_3/
@@ -44,9 +43,9 @@ for joint_name in joint_names:
         print(f"Created Battery instance for joint: {joint_name}")
 
 start_time = time.time()
-while time.time() - start_time < 1:
+while time.time() - start_time < 5:
         pass  # wait for 5 seconds to let the simulation start
-semantic = SmartChargingSemantic(env)
+semantic = SmartChargingSemantic(env,batteries)
 
 print("Checking if the AAA charger is free:")
 # semantic.is_charger_free_for(batteries['battery_AAA/user_joint_16/'])
@@ -96,7 +95,7 @@ executor.plan_and_move_to_xyz_facing_down("ur5e_2", [-0.7, -0.6, 0.15])
 executor.wait(1000)
 start_time = time.time()
 
-while time.time() - start_time < 10:
+while time.time() - start_time < 8:
         continue  # wait for 5 seconds to let the simulation start
 
 
