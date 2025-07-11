@@ -445,7 +445,7 @@ class SimEnv:
         self.simulate_steps(10)
 
         time.sleep(5)
-        self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
+        # self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
         # Update the object's position
         self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
 
