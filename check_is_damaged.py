@@ -3,7 +3,6 @@ from math import pi
 from sim_ur5.motion_planning.motion_executor import MotionExecutor
 import time
 from sim_ur5.mujoco_env.common.ur5e_fk import forward
-import datetime
 from battery_class import *
 from semantic_questions import SmartChargingSemantic
 

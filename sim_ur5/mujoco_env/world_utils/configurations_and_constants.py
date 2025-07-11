@@ -4,12 +4,18 @@ from sim_ur5.mujoco_env.tasks.null_task import NullTask
 from sim_ur5.mujoco_env.episode import *
 from datetime import date
 
+"""
+workspace_x_lims = [-0.9, -0.54]
+workspace_y_lims = [-1.0, -0.55]
+"""
+# TO BUT BATTERY OBJECTS IN THE CHARGER  base_rot=[0, 1.57079632679, 0]
+# TO BE STAND UP BATTERY OBJECTS IN THE CHARGER  base_rot=[0, 0, 1.57079632679]
 # Get today's date
 today = date.today()
 scene = SceneSpec(
     'clairlab',
     objects=(
-        # ObjectSpec('bin_dark_wood', base_pos=[0.2, -0.3, 0]),
+        ObjectSpec('bin_dark_wood', base_pos=[0, -0.3, 0]),
         # ObjectSpec('milk', base_pos=[0.2, -0.3, 0.1], base_joints=(JointSpec('free'),)),
 
         # ObjectSpec('battery_2', base_pos=[0, 0.2, 0.1], base_joints=(JointSpec('free'),)),
@@ -21,16 +27,17 @@ scene = SceneSpec(
         # ObjectSpec('battery_module', base_pos=[0.7, 0.0, 0.1], base_joints=(JointSpec('free'),)),
         
         # ObjectSpec('battery_AA', base_pos=[0.3, 0.0, 0.07],base_joints=(JointSpec('free'),)),
-        ObjectSpec('battery_AA', base_pos=[0.3, 0.0, 0.07],base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),),),
-        ObjectSpec('AA_charger', base_pos=[0.3, 0.0, 0.02]),
+        ObjectSpec('battery_AAA', base_pos=[-0.5, 0.0, 0.03], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+        ObjectSpec('battery_AA', base_pos=[-0.55, 0.0, 0.04],base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
 
-        ObjectSpec('battery_AAA', base_pos=[-0.7, -0.7, 0.07], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),), base_rot=[0, 1.57079632679, 0]),
-        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.7, 0.02]),
-
-        ObjectSpec('battery_C', base_pos=[-0.8, -0.7, 0.07], base_rot=[0, 1.57079632679, 0],base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+        ObjectSpec('battery_C', base_pos=[-0.6, 0.0, 0.04],base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
         # ObjectSpec('battery_C_charger', base_pos=[0.4, 0, 0.05], base_joints=(JointSpec('free'),)),
         
-        ObjectSpec('battery_D', base_pos=[-0.5, -0.5, 0.07], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+        ObjectSpec('battery_D', base_pos=[-0.7, 0.0, 0.04], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+       
+        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.02]),
+        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.02]),
+       
         # ObjectSpec('battery_D_charger', base_pos=[0.5, 0, 0.05], base_joints=(JointSpec('free'),)),
 
 

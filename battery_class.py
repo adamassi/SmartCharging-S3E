@@ -1,14 +1,30 @@
 import time
 # how long can the battery be charged before it is considered damaged
 battery_died = 4
+# class Batteris:
+#     def __init__(self,env):
+#         """
+#         Initialize the Batteris class with a simulation environment.
+#         :param env: The simulation environment instance.
+#         """
+#         self.battery = {}
+#         joint_names = env.get_all_joint_names()  # Get all joint names from the simulation environment
+#         # Create Battery instances for joints containing "battery" in their name
+#         for joint_name in joint_names:
+#             if "battery" in joint_name.lower():
+#                 key = joint_name.split('-')[0]
+#                 batteryi = Battery(name=joint_name, env=env)
+#                 self.battery[key] = batteryi  # Store the battery instance in the dictionary
+
 
 class Battery:
     """
     Represents a battery with charging tracking and type specification.
     Tracks start/end charging times and computes charge percentage.
     """
+    
 
-    def __init__(self, name: str, initial_charge: float = 0.0, charging_rate: float = 1.0, discharge_rate: float = 0.1 ,env=None):
+    def __init__(self, name: str, initial_charge: float = 0.0, charging_rate: float = 40.0, discharge_rate: float = 0.1 ,env=None):
         """
         Initialize the battery object.
         :param name: Unique identifier for the battery (e.g., 'battery_AAA').
@@ -53,7 +69,7 @@ class Battery:
         if not self.is_charging:
             self.charge_start_time = time.time()
             self.is_charging = True
-            print(f"[{self.name}] ({self.battery_type}) Charging started at {self.charge_start_time}")
+            # print(f"[{self.name}] ({self.battery_type}) Charging started at {self.charge_start_time}")
 # done
     def stop_charging(self):
         """
@@ -64,8 +80,7 @@ class Battery:
             self.charge_end_time = time.time()
             self._update_charge()
             self.is_charging = False
-            print(f"[{self.name}] ({self.battery_type}) Charging stopped at {self.charge_end_time}. Charge: {self.charge_percent:.2f}%")
-            # self.check_is_damaged()
+            # print(f"[{self.name}] ({self.battery_type}) Charging stopped at {self.charge_end_time}. Charge: {self.charge_percent:.2f}%")
 # done
     def _update_charge(self):
         """
@@ -74,7 +89,7 @@ class Battery:
         if self.charge_start_time and self.charge_end_time:
             elapsed_time = self.charge_end_time - self.charge_start_time
             added_charge = elapsed_time * self.charging_rate
-            print(f"charg to add: {added_charge}")
+            # print(f"charg to add: {added_charge}")
             self.charge_percent = min(100.0, self.charge_percent + added_charge)  # Cap at 100%
 # done 
     def check_charge_progress(self):
@@ -86,10 +101,10 @@ class Battery:
             elapsed_time = time.time() - self.charge_start_time
             added_charge = elapsed_time * self.charging_rate
             current_charge = min(100.0, self.charge_percent + added_charge)
-            print(f"[{self.name}] ({self.battery_type}) Current charge: {current_charge:.2f}%")
+            # print(f"[{self.name}] ({self.battery_type}) Current charge: {current_charge:.2f}%")
             return current_charge
         else:
-            print(f"[{self.name}] ({self.battery_type}) Battery is not charging.")
+            # print(f"[{self.name}] ({self.battery_type}) Battery is not charging.")
             self.discharge_battery()  # Ensure the battery is discharged if not charging
             return self.charge_percent
 # done
@@ -103,7 +118,7 @@ class Battery:
             discharged_amount = elapsed_time * self.discharge_rate
             self.charge_percent = max(0.0, self.charge_percent - discharged_amount)  # Ensure charge doesn't go below 0
             self.last_discharge_time = current_time
-            print(f"[{self.name}] ({self.battery_type}) Discharged. Current charge: {self.charge_percent:.2f}%")
+            # print(f"[{self.name}] ({self.battery_type}) Discharged. Current charge: {self.charge_percent:.2f}%")
 
     def get_status(self):
         """
@@ -131,23 +146,20 @@ class Battery:
         if self.is_damaged:
             return True
         elif self.is_charging:
-            # print("CCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-            print(time.time() - self.charge_start_time)
+            # print(time.time() - self.charge_start_time)
             if time.time() - self.charge_start_time > battery_died:
-                # print("CCCCCCCcccccccccccc")
                 # If the battery has been charging for too long, mark it as damaged
                 self.is_damaged = True
                 name = self.name.split('/')[0]
                 self.env.change_battery_color(name+'/battery_body', [1,0,0,1])  # Change color to red to indicate damage
-                print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to overcharging.")
+                # print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to overcharging.")
                 return True
         else:
             if self.charge_end_time - self.charge_start_time > battery_died:
-                # print("AAAAAAAAAAAaaaaaaaa")
                 self.is_damaged = True
                 name = self.name.split('/')[0]
                 self.env.change_battery_color(name+'/battery_body', [1,0,0,1])
-                print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to prolonged discharge.")
+                # print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to prolonged discharge.")
                 return True
         return False
 

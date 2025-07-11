@@ -2,7 +2,6 @@
 from copy import deepcopy, copy
 from collections import namedtuple
 import mujoco as mj
-import scipy
 from mujoco import MjvCamera, mjtFont
 # from mujoco.mjbindings.functions import mjv_addText  # Commented out as it cannot be resolved
 from sim_ur5.mujoco_env import MujocoEnv
@@ -10,7 +9,7 @@ from sim_ur5.mujoco_env.world_utils.object_manager import ObjectManager
 from sim_ur5.mujoco_env.world_utils.grasp_manager import GraspManager
 from sim_ur5.mujoco_env.world_utils.configurations_and_constants import *
 from sim_ur5.utils.logging_util import setup_logging
-import logging
+from scipy.spatial.transform import Rotation as R
 import time
 
 
@@ -259,6 +258,7 @@ class SimEnv:
         # Step the simulation to apply the changes
         self.simulate_steps(10)
         # print(f"Simulation updated with new position for {object_name}.")
+        # to but in charger base_rot=[0, 1.57079632679, 0])
     def get_contacts(self, geom1_name, geom2_name):
         """
         Get the indices in the MuJoCo contacts database that match those of the given geoms, 
@@ -424,38 +424,34 @@ class SimEnv:
             object_name: The name of the object to update.
             new_position: A list [x, y, z] specifying the new position.
         """
-        if object_name.startswith('spoon/'):
-           new_rotation_euler = [0, 0, 1.57079632679]
-        else:
-           new_rotation_euler = [0, 0, -1.57079632679]
-
+        
+        new_rotation_euler = [0, 1.57079632679, 0]
+        
         # Convert Euler angles to quaternion
         new_rotation_quat = R.from_euler('xyz', new_rotation_euler).as_quat()
 
         # Get the object's current position and rotation
         joint_id = self._mj_model.joint(object_name).id
         pos_adrr = self._mj_model.jnt_qposadr[joint_id]
-        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = [0, 0.9, 0.5]  # Reset position to origin for simplicity
-
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = [0, -0.9, 0.8]  # Reset position to origin for simplicity
+        # time.sleep(13)  # Wait for the simulation to stabilize
         # Step the simulation to apply the changes
         self.simulate_steps(10)
-        
-          # Sleep for 30 seconds
+        # time.sleep(1)
 
         # Update the object's rotation
         rot_adrr = pos_adrr + 3  # Rotation values start after position
         self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
         self.simulate_steps(10)
 
-        time.sleep(3)
-        
-
+        time.sleep(5)
+        self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
         # Update the object's position
         self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
 
         # Step the simulation to apply the changes
-        self.simulate_steps(10)
-        time.sleep(7)
+        self.simulate_steps(3)
+        time.sleep(2)
 
     def print_all_joint_names(self):
         """
@@ -532,6 +528,17 @@ class SimEnv:
         # Force a render update if in human render mode
         if self.render_mode == "human":
             self._env.render()
+    def wait(self, seconds):
+        """
+        Wait for a specified number of seconds.
+        
+        Args:
+            seconds (float): The number of seconds to wait.
+        """
+        print(f"Waiting for {seconds} seconds...")
+        start_time = time.time()
+        while time.time() - start_time < seconds:
+                pass  # wait for the specified seconds to let the simulation start
 
 def convert_mj_struct_to_namedtuple(mj_struct):
     """
