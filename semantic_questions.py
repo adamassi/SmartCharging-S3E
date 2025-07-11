@@ -32,7 +32,9 @@ class SmartChargingSemantic:
         """
         charger_type = charger.split("_")[1].strip("/")
         return charger_type == battery.battery_type
+    
 
+# DONE 
     def is_damaged(self, battery):
         """
         Check if the battery is physically damaged.
@@ -40,7 +42,7 @@ class SmartChargingSemantic:
         :return: True if the battery is damaged, False otherwise.
         """
         return battery.check_is_damaged()
-
+# done 
     def should_be_discarded(self, battery):
         """
         Check if the battery should be discarded.
