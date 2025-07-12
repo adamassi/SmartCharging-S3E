@@ -46,7 +46,7 @@ for battery in batteries.values():
     print(f"{battery.name}:")
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
-sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 executor.wait(30)
 # charg battery AA
 print("================================")
@@ -72,7 +72,7 @@ for battery in batteries.values():
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
 
-sim_env.place_object_in_charger(batteries['battery_AAA/1'].name,[-0.7, -0.9, 0.09])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_AAA/1'].name,[-0.7, -0.9, 0.05])  # Place the AAA battery in its charger
 print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AAA/1'])}")  # Check if the charger for AAA battery is free
 
 print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AA/1'])}")  # Check if the charger for AAA battery is free
