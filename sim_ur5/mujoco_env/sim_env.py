@@ -427,32 +427,49 @@ class SimEnv:
         
         new_rotation_euler = [0, 1.57079632679, 0]
         
+       # Get the object's joint ID and qpos address
+        joint_id = self._mj_model.joint(object_name).id
+        pos_adrr = self._mj_model.jnt_qposadr[joint_id]
+
+        # Update position
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
+
+        # Update rotation if provided
+        if new_rotation_euler is not None:
+            # Convert Euler angles to quaternion
+            new_rotation_quat = R.from_euler('xyz', new_rotation_euler).as_quat()
+            rot_adrr = pos_adrr + 3  # Rotation values (quaternion) start after position (x,y,z)
+            self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
+        
+        # self.simulate_steps(1)
+        # time.sleep(3)
+        # Step the simulation to apply the changes
+        self.simulate_steps(10)
+    
+        # time.sleep(2)
+    def remove_object_from_charger(self, object_name,new_position=[0, -0.9, 0.8]):
+        """
+        Remove an object from the charger by resetting its position and rotation.
+
+        Args:
+            object_name: The name of the object to remove.
+        """
+        new_rotation_euler = [0, 0, 1.57079632679]
+        
         # Convert Euler angles to quaternion
         new_rotation_quat = R.from_euler('xyz', new_rotation_euler).as_quat()
 
-        # Get the object's current position and rotation
+        # Get the object's joint ID and position address
         joint_id = self._mj_model.joint(object_name).id
         pos_adrr = self._mj_model.jnt_qposadr[joint_id]
-        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = [0, -0.9, 0.8]  # Reset position to origin for simplicity
-        # time.sleep(13)  # Wait for the simulation to stabilize
-        # Step the simulation to apply the changes
-        self.simulate_steps(10)
-        # time.sleep(1)
-
         # Update the object's rotation
-        rot_adrr = pos_adrr + 3  # Rotation values start after position
+        rot_adrr = pos_adrr + 3  # Rotation values (quaternion)
         self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
-        self.simulate_steps(10)
-
-        time.sleep(5)
-        # self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
         # Update the object's position
         self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
 
-        # Step the simulation to apply the changes
-        self.simulate_steps(3)
-        time.sleep(2)
-
+        # Reset position to origin for simplicity
+        # self._mj_data.qpos[pos_adrr:pos_adrr + 3] = [0, -0.9, 0.8]
     def print_all_joint_names(self):
         """
         Print all joint names in the MuJoCo model.
@@ -540,7 +557,7 @@ class SimEnv:
         while time.time() - start_time < seconds:
                 pass  # wait for the specified seconds to let the simulation start
     
-    def update_object_position_and_rotation(self, object_name, new_position, new_rotation_euler=None):
+    def update_object_position_and_rotation(self, object_name, new_position, new_rotation_euler=[0,  1.57079632679,0]):
         """
         Update the position and optionally the rotation of a specific object.
 

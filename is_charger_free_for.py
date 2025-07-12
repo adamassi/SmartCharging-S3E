@@ -46,7 +46,10 @@ start_time = time.time()
 while time.time() - start_time < 5:
         pass  # wait for 5 seconds to let the simulation start
 semantic = SmartChargingSemantic(env,batteries)
-
+print("================================")
+print("placing battery AA on its charger")
+# env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.72, -0.75, 0.03])  # Place the AA battery in its charger
+env.update_object_position_and_rotation(batteries['battery_AA/1'].name, [-0.7, -0.75, 0.03])
 print("Checking if the AAA charger is free:")
 # semantic.is_charger_free_for(batteries['battery_AAA/user_joint_16/'])
 print(semantic.is_charger_free_for(batteries['battery_AA/1']))

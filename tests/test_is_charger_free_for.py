@@ -39,7 +39,7 @@ for battery in batteries.values():
 # Place a battery on its charger
 print("================================")
 print("Placing battery AA on its charger")
-sim_env.place_object_in_charger(batteries['battery_AA/1'].name, [-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_AA/1'].name, [-0.7, -0.75, 0.02])  # Place the AA battery in its charger
 
 executor.wait(10)  # Wait for the simulation to update
 print("After placing battery AA on its charger")
@@ -61,7 +61,7 @@ for battery in batteries.values():
 
 print("================================")
 print("Removing battery AA from its charger")
-sim_env.remove_object_from_charger(batteries['battery_AA/1'].name)
+sim_env.remove_object_from_charger(batteries['battery_AA/1'].name,[-0.55, 0.0, 0.04])
 
 executor.wait(1)
 print("After removing battery AA from its charger")
@@ -83,10 +83,6 @@ for battery in batteries.values():
 # Remove a battery from its charger
 print("================================")
 print("Removing battery AA from its charger")
-sim_env.remove_object_from_charger(batteries['battery_AA/1'].name)  # Remove the AA battery from its charger
 
 executor.wait(1)  # Wait for the simulation to update
-print("After removing battery AA from its charger")
-for battery in batteries.values():
-    print(f"{battery.name}:")
-    print(f"Is charger free  for battery type {battery.battery_type}: {semantic.is_charger_free_for(battery)}")
+sim_env.wait(5)

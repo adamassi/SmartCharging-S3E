@@ -27,20 +27,21 @@ scene = SceneSpec(
         # ObjectSpec('battery_module', base_pos=[0.7, 0.0, 0.1], base_joints=(JointSpec('free'),)),
         
         # ObjectSpec('battery_AA', base_pos=[0.3, 0.0, 0.07],base_joints=(JointSpec('free'),)),
-        # ObjectSpec('battery_AAA', base_pos=[-0.5, 0.0, 0.03], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
-        # ObjectSpec('battery_AA', base_pos=[-0.55, 0.0, 0.04],base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
+        ObjectSpec('battery_AAA', base_pos=[-0.5, 0.0, 0.03], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+        ObjectSpec('battery_AA', base_pos=[-0.55, 0.0, 0.04],base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
 
         ObjectSpec('battery_C', base_pos=[-0.6, 0.0, 0.04],base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
         # ObjectSpec('battery_C_charger', base_pos=[0.4, 0, 0.05], base_joints=(JointSpec('free'),)),
         
         ObjectSpec('battery_D', base_pos=[-0.7, 0.0, 0.04], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
 
+        # ObjectSpec('battery_AAA', base_pos=[-0.7, -0.90, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
+        # ObjectSpec('battery_AA', base_pos=[-0.7, -0.75, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
 
-        ObjectSpec('battery_AAA', base_pos=[-0.7, -0.90, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
-        ObjectSpec('battery_AA', base_pos=[-0.7, -0.75, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
-
-        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.05]),
-        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.05]),
+        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.003]),
+        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.003]),
+        ObjectSpec('C_charger', base_pos=[-0.7, -0.65, 0.003]),
+        ObjectSpec('D_charger', base_pos=[-0.8, -0.9, 0.003]),
 
        
         # ObjectSpec('battery_D_charger', base_pos=[0.5, 0, 0.05], base_joints=(JointSpec('free'),)),
