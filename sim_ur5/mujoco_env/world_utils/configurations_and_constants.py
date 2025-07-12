@@ -39,7 +39,7 @@ scene = SceneSpec(
         # ObjectSpec('battery_AA', base_pos=[-0.7, -0.75, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
 
         ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.003]),
-        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.003]),
+        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.005]),
         ObjectSpec('C_charger', base_pos=[-0.7, -0.65, 0.003]),
         ObjectSpec('D_charger', base_pos=[-0.8, -0.9, 0.003]),
 
