@@ -38,8 +38,8 @@ scene = SceneSpec(
         ObjectSpec('battery_AAA', base_pos=[-0.7, -0.90, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free', attrs={'name':"1-"+str(today)}),)),
         ObjectSpec('battery_AA', base_pos=[-0.7, -0.75, 0.08], base_rot=[0, 1.57079632679, 0], base_joints=(JointSpec('free',attrs={'name':"1-"+str(today)}),)),
 
-        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.02]),
-        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.02]),
+        ObjectSpec('AAA_charger', base_pos=[-0.7, -0.9, 0.05]),
+        ObjectSpec('AA_charger', base_pos=[-0.7, -0.75, 0.05]),
        
         # ObjectSpec('battery_D_charger', base_pos=[0.5, 0, 0.05], base_joints=(JointSpec('free'),)),
 

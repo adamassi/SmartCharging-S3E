@@ -1,7 +1,6 @@
 
 """
-in this test we charge battery AA for 2 seconds and then check if it is charged
-and chck the charge progress
+in this test we charge battery AA for 6 seconds and then check if it is damaged
 start with 0% charge
 whith
 """
@@ -35,18 +34,21 @@ sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.0
 
 
 """
-    Test the is_charged method when the battery is charged above 60%.
+    Test the is_damaged method when the battery is charged above 60%.
 """
-# === Tests for is_charged ===
+# === Tests for is_damaged ===
 print("================================")
-print("Testing is_charged functionality")
-##is_charged_false##
+print("Testing is_damaged functionality")
+##is_damaged_false##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
     print(f"{battery.name}:")
-    print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
-
-sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+    print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
+# TODO ADD
+# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 executor.wait(30)
 # charg battery AA
 print("================================")
@@ -56,26 +58,29 @@ batteries['battery_AA/1'].start_charging()  # Start charging the AA battery
 sim_env.wait(1)  # Wait for the battery to charge
 print("after 1 second of charging")
 print("================================")
-### tests_is_charged_true##
+### tests_is_damaged_false##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
     print(f"{battery.name}:")
-    print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
-
-sim_env.wait(1)  # Wait for the battery to charge
-print("after 2 seconds of charging")
+    print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
 print("================================")
-### tests_is_charged_true##
+print("starting to charge battery AAA AND C AND D")
+batteries['battery_AAA/1'].start_charging()  # Start charging the AAA battery
+batteries['battery_C/1'].start_charging()  # Start charging the C battery
+batteries['battery_D/1'].start_charging()  # Start charging the D battery
+
+sim_env.wait(6)  # Wait for the battery to charge
+print("after 6 seconds of charging")
+print("================================")
+### tests_is_damaged_true##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
     print(f"{battery.name}:")
-    print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
+    print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
 
-sim_env.place_object_in_charger(batteries['battery_AAA/1'].name,[-0.7, -0.9, 0.09])  # Place the AA battery in its charger
-print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AAA/1'])}")  # Check if the charger for AAA battery is free
 
-print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AA/1'])}")  # Check if the charger for AAA battery is free
 
 sim_env.wait(10)  # Wait for the battery to charge
 
+print("after 16 seconds of charging")
