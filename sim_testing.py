@@ -20,8 +20,8 @@ workspace_y_lims = [-1.0, -0.55]
 executor = MotionExecutor(env)
 print("waiting for 1 second")
 start_time = time.time()
-while time.time() - start_time < 60:
-        pass  # wait for 5 seconds to let the simulation start
+# while time.time() - start_time < 60:
+#         pass  # wait for 5 seconds to let the simulation start
 # Add batterys to the world
 #env.reset(randomize=False, battery_positions=battery_position)
 #executor.pick_up("ur5e_2", -0.6, -0.5, 0.03)
@@ -32,7 +32,17 @@ while time.time() - start_time < 60:
 # with open('battery_texture.bng', 'wb') as file:
 #     file.write(today_date.encode('utf-8'))
 
-
+# env.print_all_joint_names()
+executor.wait(150)
+env.update_object_position_and_rotation("battery_AAA/1-2025-07-11/", [-0.7, -0.9, 0.1])
+executor.wait(200)
+env.update_object_position_and_rotation("battery_AAA/1-2025-07-11/", [-0.7, -0.99, 0.08])
+executor.wait(200)
+env.update_object_position_and_rotation("battery_AAA/1-2025-07-11/", [-0.7, -0.95, 0.08])
+executor.wait(200)
+env.update_object_position_and_rotation("battery_AAA/1-2025-07-11/", [-0.7, -0.9, 0.08])
+executor.wait(200)
+# env.place_object_in_charger("battery_AAA/1-2025-07-11/", [-0.7, -0.90, 0.08])
 """
 executor.plan_and_move_to_xyz_facing_down("ur5e_2", [-0.7, -0.6, 0.15])
 """
@@ -46,7 +56,7 @@ executor.plan_and_move_to_xyz_facing_down("ur5e_2", [-0.7, -0.6, 0.15])
 # executor.plan_and_move_to_xyz_facing_down("ur5e_1", [0.7, 0, 0])
 
 #executor.put_down("ur5e_2", -0.4, -0.4, 0.2)
-executor.wait(1000)
+executor.wait(3000)
 
 
 

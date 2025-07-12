@@ -539,7 +539,37 @@ class SimEnv:
         start_time = time.time()
         while time.time() - start_time < seconds:
                 pass  # wait for the specified seconds to let the simulation start
+    
+    def update_object_position_and_rotation(self, object_name, new_position, new_rotation_euler=None):
+        """
+        Update the position and optionally the rotation of a specific object.
 
+        Args:
+            object_name: The name of the object's joint to update (e.g., "plate/").
+            new_position: A list [x, y, z] specifying the new position.
+            new_rotation_euler: An optional list [roll, pitch, yaw] in radians for the new orientation.
+                                If None, the rotation is not changed.
+        """
+        
+        # Get the object's joint ID and qpos address
+        joint_id = self._mj_model.joint(object_name).id
+        pos_adrr = self._mj_model.jnt_qposadr[joint_id]
+
+        # Update position
+        self._mj_data.qpos[pos_adrr:pos_adrr + 3] = new_position
+
+        # Update rotation if provided
+        if new_rotation_euler is not None:
+            # Convert Euler angles to quaternion
+            new_rotation_quat = R.from_euler('xyz', new_rotation_euler).as_quat()
+            rot_adrr = pos_adrr + 3  # Rotation values (quaternion) start after position (x,y,z)
+            self._mj_data.qpos[rot_adrr:rot_adrr + 4] = new_rotation_quat
+        
+        # self.simulate_steps(1)
+        # time.sleep(3)
+        # Step the simulation to apply the changes
+        self.simulate_steps(10)
+        
 def convert_mj_struct_to_namedtuple(mj_struct):
     """
     convert a mujoco struct to a dictionary
