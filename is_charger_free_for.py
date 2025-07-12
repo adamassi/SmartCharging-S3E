@@ -47,6 +47,9 @@ while time.time() - start_time < 5:
         pass  # wait for 5 seconds to let the simulation start
 semantic = SmartChargingSemantic(env,batteries)
 print("================================")
+print("placing battery D on its charger")
+env.place_object_in_charger(batteries['battery_C/1'],[-0.8, -0.9, 0.03])  # Place the AA battery in its charger
+print("================================")
 print("placing battery AA on its charger")
 # env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.72, -0.75, 0.03])  # Place the AA battery in its charger
 env.update_object_position_and_rotation(batteries['battery_AA/1'].name, [-0.7, -0.75, 0.03])
@@ -98,7 +101,7 @@ executor.plan_and_move_to_xyz_facing_down("ur5e_2", [-0.7, -0.6, 0.15])
 executor.wait(1000)
 start_time = time.time()
 
-while time.time() - start_time < 8:
+while time.time() - start_time < 800:
         continue  # wait for 5 seconds to let the simulation start
 
 

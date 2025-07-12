@@ -416,7 +416,7 @@ class SimEnv:
         angle_deg = np.degrees(angle_rad)
         print(f"Angle between local Z and world Z for {object_name}: {angle_deg} degrees")
         return angle_deg < tolerance
-    def place_object_in_charger(self, object_name, new_position):
+    def place_object_in_charger(self, object, new_position):
         """
         Update the position and rotation of an object in the charger to make it upright.
 
@@ -428,7 +428,7 @@ class SimEnv:
         new_rotation_euler = [0, 1.57079632679, 0]
         
        # Get the object's joint ID and qpos address
-        joint_id = self._mj_model.joint(object_name).id
+        joint_id = self._mj_model.joint(object.name).id
         pos_adrr = self._mj_model.jnt_qposadr[joint_id]
 
         # Update position
@@ -445,6 +445,8 @@ class SimEnv:
         # time.sleep(3)
         # Step the simulation to apply the changes
         self.simulate_steps(10)
+        object.start_charging()  # Start charging the battery
+
     
         # time.sleep(2)
     def remove_object_from_charger(self, object_name,new_position=[0, -0.9, 0.8]):
@@ -586,13 +588,37 @@ class SimEnv:
         # time.sleep(3)
         # Step the simulation to apply the changes
         self.simulate_steps(10)
-        
+    def select_joint(self, joint_name: str):
+        """
+        Select the body associated with a given joint by name.
+        """
+        if self.render_mode != 'human' or not hasattr(self._env.renderer, "viewer"):
+            print("Warning: Joint selection is only available in 'human' render mode.")
+            return
+
+        # Get joint ID
+        joint_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_name)
+        if joint_id == -1:
+            print(f"Warning: Joint '{joint_name}' not found.")
+            return
+
+        # Get the body ID associated with this joint
+        body_id = self._mj_model.jnt_bodyid[joint_id]
+
+        # Get body name (optional: print or log it)
+        body_name = mj.mj_id2name(self._mj_model, mj.mjtObj.mjOBJ_BODY, body_id)
+
+        # Select the body as a proxy for selecting the joint
+        self.select_body(body_name)
+    
 def convert_mj_struct_to_namedtuple(mj_struct):
     """
     convert a mujoco struct to a dictionary
     """
     attrs = [attr for attr in dir(mj_struct) if not attr.startswith('__') and not callable(getattr(mj_struct, attr))]
     return namedtuple(mj_struct.__class__.__name__, attrs)(**{attr: getattr(mj_struct, attr) for attr in attrs})
+
+
 
 
 
