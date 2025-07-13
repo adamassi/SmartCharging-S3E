@@ -21,6 +21,7 @@ class SmartChargingSemantic:
         :param battery: Battery class instance.
         :return: True if the battery's charge percentage is greater than 60%, False otherwise.
         """
+        self.sim_env.select_body(battery.body_name)  # Select the battery body in the simulation environment
         return battery.check_charge_progress() > 60.0
 
     def is_compatible_with(self, charger: str, battery):

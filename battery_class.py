@@ -39,7 +39,8 @@ class Battery:
         self.discharge_rate = discharge_rate
         self.env = env  # Reference to the simulation environment, if needed
         self.creation_time = time.time()  # Battery creation time
-
+        # Extract the body name from the battery name
+        self.body_name = name.split('/')[0]  +"/"+ name.split('/')[0]
         self.is_charging = False
         self.charge_start_time =  time.time()
         self.charge_end_time =  time.time()
@@ -66,6 +67,7 @@ class Battery:
         """
         Start charging the battery.
         """
+        # self.env.select_body(self.body_name)  # Select the battery body in the simulation environment
         if not self.is_charging:
             self.charge_start_time = time.time()
             self.is_charging = True
@@ -75,6 +77,7 @@ class Battery:
         """
         Stop charging the battery and update its charge percentage.
         """
+        self.env.select_body(self.body_name)
         if self.is_charging:
             self.check_is_damaged()
             self.charge_end_time = time.time()
@@ -86,6 +89,7 @@ class Battery:
         """
         Update the battery's charge percentage based on the elapsed charging time.
         """
+        # self.env.select_body(self.body_name)
         if self.charge_start_time and self.charge_end_time:
             elapsed_time = self.charge_end_time - self.charge_start_time
             added_charge = elapsed_time * self.charging_rate
@@ -97,6 +101,7 @@ class Battery:
         Check the current charge percentage while the battery is charging.
         :return: The current charge percentage.
         """
+        
         if self.is_charging:
             elapsed_time = time.time() - self.charge_start_time
             added_charge = elapsed_time * self.charging_rate
@@ -143,6 +148,7 @@ class Battery:
         Check if the battery is damaged due to overcharging.
         :return: True if the battery is damaged, False otherwise.
         """
+        self.env.select_body(self.body_name)
         if self.is_damaged:
             return True
         elif self.is_charging:

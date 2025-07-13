@@ -30,11 +30,8 @@ for joint_name in joint_names:
 semantic= SmartChargingSemantic(sim_env, batteries)
 executor.wait(100)  # Wait for the simulation to be ready
 
-sim_env.place_object_in_charger(batteries['battery_AA/1'],[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
-print("will select battery_AA/1")
-# sim_env.select_body("battery_AA/")
-sim_env.select_free_joint("battery_AA/1-2025-07-13/")
-executor.wait(5000)
+# sim_env.select_free_joint("battery_AA/1-2025-07-13/")
+executor.wait(500)
 """
     Test the is_charged method when the battery is charged above 60%.
 """
@@ -44,11 +41,18 @@ print("Testing is_charged functionality")
 ##is_charged_false##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
+    # sim_env.select_body(battery.body_name)
+
     print(f"{battery.name}:")
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
 # sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 executor.wait(30)
+# sim_env.select_body("battery_AA/")
+sim_env.wait(1)
+sim_env.place_object_in_charger(batteries['battery_AA/1'],[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+print("will select battery_AA/1")
+
 # charg battery AA
 print("================================")
 print("starting to charge battery AA")
@@ -60,6 +64,7 @@ print("================================")
 ### tests_is_charged_true##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
+    sim_env.select_body(battery.body_name)
     print(f"{battery.name}:")
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
@@ -69,17 +74,21 @@ print("================================")
 ### tests_is_charged_true##
 for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
+    # sim_env.select_body(battery.body_name)
     print(f"{battery.name}:")
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
+# sim_env.select_body("battery_AAA")
 sim_env.wait(1)  # Wait for the battery to charge
 print("================================")
 print("starting to charge battery AAA")
 sim_env.place_object_in_charger(batteries['battery_AAA/1'],[-0.7, -0.9, 0.05])  # Place the AAA battery in its charger
 
 
-
+print("stats after placing battery AAA in charger")
 for battery in batteries.values():
+    #TODO FIRAS FUNCTIONALITY
+    # sim_env.select_body(battery.body_name)
     print(f"{battery.name}:")
     print(f"is charged: {semantic.is_charged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
@@ -87,5 +96,5 @@ print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AA
 
 print(f"Charger free status: {semantic.is_charger_free_for(batteries['battery_AA/1'])}")  # Check if the charger for AA battery is free
 
-sim_env.wait(1000)  # Wait for the battery to charge
+sim_env.wait(10)  # Wait for the battery to charge
 
