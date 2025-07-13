@@ -33,7 +33,8 @@ class WindowRenderer(BaseRenderer):
             self.camera.fixedcamid = self._camera_id
             if self._camera_id != -1:
                 self.camera.type = mujoco.mjtCamera.mjCAMERA_FIXED
-
+            self.options.label = mujoco.mjtLabel.mjLABEL_SELECTION
+            
         self.prev_render_time = 0
 
     @property

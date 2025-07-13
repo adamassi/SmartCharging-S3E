@@ -12,6 +12,8 @@ from sim_ur5.utils.logging_util import setup_logging
 from scipy.spatial.transform import Rotation as R
 import time
 
+from sim_ur5.mujoco_env.rendering import WindowRenderer
+
 
 class SimEnv:
     def __init__(self, render_mode='human', cfg=muj_env_config, render_sleep_to_maintain_fps=True):
@@ -586,6 +588,89 @@ class SimEnv:
         # time.sleep(3)
         # Step the simulation to apply the changes
         self.simulate_steps(10)
+    def select_body(self, body_name: str):
+        """
+        Select a body in the MuJoCo viewer. Its label will appear if labels for
+        selected objects are enabled in the viewer (usually by pressing 'L').
+        To deselect, pass None as the body_name.
+        """
+        if self.render_mode != 'human' or not hasattr(self._env.renderer, "viewer"):
+            print("Warning: Body selection is only available in 'human' render mode.")
+            return
+
+        viewer = self._env.renderer.viewer
+        with viewer.lock():
+            if body_name:
+                body_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_BODY, body_name)
+                if body_id != -1:
+                    # Set the selected body ID. The viewer will highlight it.
+                    viewer._pert.select = body_id
+                    # 'active' is for enabling mouse perturbations. Set to 0 to only select.
+                    viewer._pert.active = 0
+                else:
+                    print(f"Warning: Body '{body_name}' not found. Deselecting.")
+                    viewer._pert.select = -1  # Deselect if name not found
+                    viewer._pert.active = 0
+            else:
+                # Deselect if body_name is None
+                viewer._pert.select = -1
+                viewer._pert.active = 0
+    def select_free_joint(self, joint_name: str):
+        """
+        Select a free joint in the MuJoCo viewer. Its label will appear if labels for
+        selected objects are enabled in the viewer.
+        To deselect, pass None as the joint_name.
+        """
+        if self.render_mode != 'human' or not hasattr(self._env.renderer, "viewer"):
+            print("Warning: Joint selection is only available in 'human' render mode.")
+            return
+
+        viewer = self._env.renderer.viewer
+        with viewer.lock():
+            if joint_name:
+                joint_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_name)
+                if joint_id != -1:
+                    # Set the selected joint ID and type.
+                    viewer._pert.select = joint_id
+                    viewer._pert.objtype = mj.mjtObj.mjOBJ_JOINT
+                    viewer._pert.active = 0
+                else:
+                    print(f"Warning: Joint '{joint_name}' not found. Deselecting.")
+                    viewer._pert.select = -1
+                    viewer._pert.objtype = 0
+                    viewer._pert.active = 0
+            else:
+                # Deselect if joint_name is None
+                viewer._pert.select = -1
+                viewer._pert.objtype = 0
+                viewer._pert.active = 0
+    # def select_free_joint(self, joint_name: str):
+    #     """
+    #     Select a free joint in the MuJoCo viewer. Its label will appear if labels for
+    #     selected objects are enabled in the viewer (usually by pressing 'L').
+    #     To deselect, pass None as the joint_name.
+    #     """
+    #     if self.render_mode != 'human' or not hasattr(self._env.renderer, "viewer"):
+    #         print("Warning: Joint selection is only available in 'human' render mode.")
+    #         return
+
+    #     viewer = self._env.renderer.viewer
+    #     with viewer.lock():
+    #         if joint_name:
+    #             joint_id = mj.mj_name2id(self._mj_model, mj.mjtObj.mjOBJ_JOINT, joint_name)
+    #             if joint_id != -1:
+    #                 # Set the selected joint ID. The viewer will highlight it.
+    #                 viewer._pert.select = joint_id
+    #                 # 'active' is for enabling mouse perturbations. Set to 0 to only select.
+    #                 viewer._pert.active = 0
+    #             else:
+    #                 print(f"Warning: Joint '{joint_name}' not found. Deselecting.")
+    #                 viewer._pert.select = -1  # Deselect if name not found
+    #                 viewer._pert.active = 0
+    #         else:
+    #             # Deselect if joint_name is None
+    #             viewer._pert.select = -1
+    #             viewer._pert.active = 0
         
 def convert_mj_struct_to_namedtuple(mj_struct):
     """

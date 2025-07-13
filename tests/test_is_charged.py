@@ -33,7 +33,10 @@ executor.wait(100)  # Wait for the simulation to be ready
 
 sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 
-
+print("will select battery_AA/1")
+# sim_env.select_body("battery_AA/")
+sim_env.select_free_joint("battery_AA/1-2025-07-13/")
+executor.wait(5000)
 """
     Test the is_charged method when the battery is charged above 60%.
 """
