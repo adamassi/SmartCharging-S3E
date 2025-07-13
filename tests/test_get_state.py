@@ -32,7 +32,10 @@ for battery_name, battery in batteries.items():
 
 # הרצה ראשונה - בדיקה לפני כל פעולה
 answers, predicates = semantic.get_state()
-
+# print getting the state
+for i in range(len(answers)):
+    print(f"{predicates[i]}: {answers[i]} (Expected: {expected_results[i]})")
+    
 print("==== Initial State Check ====")
 for ans, pred, exp in zip(answers, predicates, expected_results):
     print(f"{pred}: {ans} (Expected: {exp})")
@@ -40,20 +43,18 @@ for ans, pred, exp in zip(answers, predicates, expected_results):
 
 # שינוי מצב: נטען battery_AA מספיק כדי שיהיה charged
 batt_AA = batteries['battery_AA/1']
-sim_env.place_object_in_charger(batt_AA.name, [-0.7, -0.75, 0.09])
-batt_AA.start_charging()
+sim_env.place_object_in_charger(batt_AA, [-0.7, -0.75, 0.09])
 sim_env.wait(2)  # מספיק זמן לעבור את ה-60%
 batt_AA.stop_charging()
 
 # שינוי מצב: battery_AAA נטען עד שיהיה damaged
 batt_AAA = batteries['battery_AAA/1']
-sim_env.place_object_in_charger(batt_AAA.name, [-0.7, -0.9, 0.09])
-batt_AAA.start_charging()
+sim_env.place_object_in_charger(batt_AAA, [-0.7, -0.9, 0.09])
 sim_env.wait(7)
 batt_AAA.stop_charging()
 
 # שינוי מצב: מניחים battery_C על המטען שלו (כדי לבדוק charger free=False)
-sim_env.place_object_in_charger(batteries['battery_C/1'].name, [-0.7, -1.05, 0.09])
+sim_env.place_object_in_charger(batteries['battery_C/1'], [-0.7, -2.05, 0.09])
 
 # === Expected after changes ===
 expected_results = []
@@ -74,4 +75,3 @@ for ans, pred, exp in zip(answers, predicates, expected_results):
 
 print("✅ All get_state checks passed.")
 
-sim_env.close()

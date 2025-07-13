@@ -30,7 +30,7 @@ for joint_name in joint_names:
 semantic= SmartChargingSemantic(sim_env, batteries)
 executor.wait(100)  # Wait for the simulation to be ready
 
-sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_AA/1'],[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 
 
 """

@@ -39,7 +39,7 @@ for battery in batteries.values():
 # Place a battery on its charger
 print("================================")
 print("Placing battery AA on its charger")
-sim_env.place_object_in_charger(batteries['battery_AA/1'].name, [-0.7, -0.75, 0.02])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_AA/1'], [-0.7, -0.75, 0.02])  # Place the AA battery in its charger
 
 executor.wait(10)  # Wait for the simulation to update
 print("After placing battery AA on its charger")
@@ -50,7 +50,7 @@ for battery in batteries.values():
 
 print("================================")
 print("Placing battery AAA on its charger")
-sim_env.place_object_in_charger(batteries['battery_AAA/1'].name, [-0.7, -0.9, 0.09])
+sim_env.place_object_in_charger(batteries['battery_AAA/1'], [-0.7, -0.9, 0.09])
 
 executor.wait(10)
 print("After placing battery AAA on its charger")
@@ -72,7 +72,7 @@ for battery in batteries.values():
 # Place another battery on a different charger
 print("================================")
 print("Placing battery AAA on its charger")
-sim_env.place_object_in_charger(batteries['battery_AAA/1'].name, [-0.7, -0.9, 0.09])  # Place the AAA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_AAA/1'], [-0.7, -0.9, 0.09])  # Place the AAA battery in its charger
 
 executor.wait(10)  # Wait for the simulation to update
 print("After placing battery AAA on its charger")

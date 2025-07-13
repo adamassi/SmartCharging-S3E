@@ -59,9 +59,12 @@ class SmartChargingSemantic:
         """
         # Get all valid geometry names in the simulation
         geoms_names = self.sim_env.get_valid_geometry_names()
+        # print(geoms_names)
+        # keep only geometries that are starting with the battery 
+        geoms_names = [geom for geom in geoms_names if geom.startswith('battery_')]
 
         # Exclude geometries related to the table
-        geoms_names = [geom for geom in geoms_names if "table" not in geom]
+        # geoms_names = [geom for geom in geoms_names if "table" not in geom]
 
         # Define the charger geometry name for the battery type
         charger_geom = f"{battery.battery_type}_charger/bottom"

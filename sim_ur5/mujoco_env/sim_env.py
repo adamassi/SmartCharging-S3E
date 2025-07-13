@@ -418,7 +418,7 @@ class SimEnv:
         angle_deg = np.degrees(angle_rad)
         print(f"Angle between local Z and world Z for {object_name}: {angle_deg} degrees")
         return angle_deg < tolerance
-    def place_object_in_charger(self, object_name, new_position):
+    def place_object_in_charger(self, object, new_position):
         """
         Update the position and rotation of an object in the charger to make it upright.
 
@@ -430,7 +430,7 @@ class SimEnv:
         new_rotation_euler = [0, 1.57079632679, 0]
         
        # Get the object's joint ID and qpos address
-        joint_id = self._mj_model.joint(object_name).id
+        joint_id = self._mj_model.joint(object.name).id
         pos_adrr = self._mj_model.jnt_qposadr[joint_id]
 
         # Update position
@@ -447,6 +447,8 @@ class SimEnv:
         # time.sleep(3)
         # Step the simulation to apply the changes
         self.simulate_steps(10)
+        object.start_charging()  # Start charging the battery
+
     
         # time.sleep(2)
     def remove_object_from_charger(self, object_name,new_position=[0, -0.9, 0.8]):
@@ -678,6 +680,8 @@ def convert_mj_struct_to_namedtuple(mj_struct):
     """
     attrs = [attr for attr in dir(mj_struct) if not attr.startswith('__') and not callable(getattr(mj_struct, attr))]
     return namedtuple(mj_struct.__class__.__name__, attrs)(**{attr: getattr(mj_struct, attr) for attr in attrs})
+
+
 
 
 
