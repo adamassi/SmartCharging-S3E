@@ -111,3 +111,61 @@ class SmartChargingSemantic:
         return np.array(answers), predicates
 
 
+def success_score(current_state, goal):
+    """
+    Calculates a success score based on the state of individual batteries.
+    The total score is divided among batteries defined in the goal.
+    A battery gets its points if it meets the 'IsCharged' goal, but gets 0 if it's damaged.
+
+    :param current_state: A tuple (answers, predicates) from semantic.get_state().
+    :param goal: A dictionary mapping predicate strings to their desired boolean state.
+    :return: A success score from 0 to 100.
+    """
+    current_answers, current_predicates = current_state
+    current_results = dict(zip(current_predicates, current_answers))
+
+    # Identify unique batteries mentioned in the goal
+    goal_batteries = set()
+    for predicate in goal.keys():
+        match = re.search(r'\((.*?)\)', predicate)
+        if match:
+            goal_batteries.add(match.group(1))
+
+    if not goal_batteries:
+        return 100.0  # No goals defined, so success is 100%
+
+    points_per_battery = 100.0 / len(goal_batteries)
+    total_score = 0.0
+
+    for battery_name in goal_batteries:
+        # Define predicates for this specific battery
+        goal_is_charged_predicate = f"IsCharged({battery_name})"
+        state_is_charged_predicate = f"IsCharged({battery_name})"
+        state_is_damaged_predicate = f"IsDamaged({battery_name})"
+
+        # Check if the goal is for this battery to be charged
+        if goal.get(goal_is_charged_predicate, False):
+            # If battery is not in the current state, it gets 0 points
+            if state_is_charged_predicate not in current_results:
+                continue
+
+            # CRITICAL FAILURE: If the battery is damaged, it gets 0 points.
+            if current_results.get(state_is_damaged_predicate, False):
+                battery_score = 0.0
+            # SUCCESS: If the battery is charged in the current state, it gets full points.
+            elif current_results.get(state_is_charged_predicate, False):
+                battery_score = points_per_battery
+            # FAILURE: Otherwise (not charged), it gets 0 points.
+            else:
+                battery_score = 0.0
+            
+            total_score += battery_score
+        else:
+            # If the goal for this battery is not about being charged,
+            # you could add other logic here. For now, we assume it contributes
+            # its full points if it simply exists, or handle other predicates.
+            # Let's assume for now only 'IsCharged' goals contribute to the score.
+            pass
+
+    return total_score
+
