@@ -1,20 +1,6 @@
 import time
 # how long can the battery be charged before it is considered damaged
 battery_died = 4
-# class Batteris:
-#     def __init__(self,env):
-#         """
-#         Initialize the Batteris class with a simulation environment.
-#         :param env: The simulation environment instance.
-#         """
-#         self.battery = {}
-#         joint_names = env.get_all_joint_names()  # Get all joint names from the simulation environment
-#         # Create Battery instances for joints containing "battery" in their name
-#         for joint_name in joint_names:
-#             if "battery" in joint_name.lower():
-#                 key = joint_name.split('-')[0]
-#                 batteryi = Battery(name=joint_name, env=env)
-#                 self.battery[key] = batteryi  # Store the battery instance in the dictionary
 
 
 class Battery:
@@ -35,8 +21,8 @@ class Battery:
         self.name = name
         self.battery_type = self._extract_battery_type(name)
         self.charge_percent = max(0.0, min(initial_charge, 100.0))  # Ensure charge is within valid range
-        self.charging_rate = charging_rate
-        self.discharge_rate = discharge_rate
+        self.discharge_rate = discharge_rate  # Discharge rate in percent per second
+
         self.env = env  # Reference to the simulation environment, if needed
         self.creation_time = time.time()  # Battery creation time
         # Extract the body name from the battery name
@@ -46,6 +32,18 @@ class Battery:
         self.charge_end_time =  time.time()
         self.is_damaged = False  # Indicates if the battery is damaged
         self.last_discharge_time = time.time()  # Track the last time the battery was discharged
+
+        # Set charging rate and battery_died based on battery type
+        if self.battery_type == "C":
+            self.charging_rate = 0.15
+            self.battery_died = 10  # Example: C-type batteries can charge for 10 seconds before damage
+        elif self.battery_type == "D":
+            self.charging_rate = 0.05
+            self.battery_died = 15  # Example: D-type batteries can charge for 15 seconds before damage
+        else:
+            self.charging_rate = charging_rate
+            self.battery_died = 4  # Default value for other battery types
+
 
     def _extract_battery_type(self, name: str) -> str:
         """
@@ -152,19 +150,18 @@ class Battery:
         if self.is_damaged:
             return True
         elif self.is_charging:
-            # print(time.time() - self.charge_start_time)
-            if time.time() - self.charge_start_time > battery_died:
+            if time.time() - self.charge_start_time > self.battery_died:
                 # If the battery has been charging for too long, mark it as damaged
                 self.is_damaged = True
                 name = self.name.split('/')[0]
-                self.env.change_battery_color(name+'/battery_body', [1,0,0,1])  # Change color to red to indicate damage
+                self.env.change_battery_color(name + '/battery_body', [1, 0, 0, 1])  # Change color to red to indicate damage
                 # print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to overcharging.")
                 return True
         else:
-            if self.charge_end_time - self.charge_start_time > battery_died:
+            if self.charge_end_time - self.charge_start_time > self.battery_died:
                 self.is_damaged = True
                 name = self.name.split('/')[0]
-                self.env.change_battery_color(name+'/battery_body', [1,0,0,1])
+                self.env.change_battery_color(name + '/battery_body', [1, 0, 0, 1])
                 # print(f"[{self.name}] ({self.battery_type}) Battery is damaged due to prolonged discharge.")
                 return True
         return False

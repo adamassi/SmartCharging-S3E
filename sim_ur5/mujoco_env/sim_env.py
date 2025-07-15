@@ -426,7 +426,7 @@ class SimEnv:
             object_name: The name of the object to update.
             new_position: A list [x, y, z] specifying the new position.
         """
-        
+        self.select_body(object.body_name)  # Select the object in the simulation
         new_rotation_euler = [0, 1.57079632679, 0]
         
        # Get the object's joint ID and qpos address

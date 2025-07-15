@@ -28,9 +28,8 @@ for joint_name in joint_names:
         print(f"Created Battery instance for joint: {joint_name}")
 
 semantic= SmartChargingSemantic(sim_env, batteries)
-executor.wait(100)  # Wait for the simulation to be ready
+executor.wait(10)  # Wait for the simulation to be ready
 
-sim_env.place_object_in_charger(batteries['battery_AA/1'],[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
 
 
 """
@@ -44,16 +43,13 @@ for battery in batteries.values():
     #TODO FIRAS FUNCTIONALITY
     print(f"{battery.name}:")
     print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
-# TODO ADD
-# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
-# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
-# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
-# sim_env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+
 executor.wait(30)
 # charg battery AA
 print("================================")
 print("starting to charge battery AA")
-batteries['battery_AA/1'].start_charging()  # Start charging the AA battery
+sim_env.place_object_in_charger(batteries['battery_AA/1'],[-0.7, -0.75, 0.09])  # Place the AA battery in its charger
+# batteries['battery_AA/1'].start_charging()  # Start charging the AA battery
 
 sim_env.wait(1)  # Wait for the battery to charge
 print("after 1 second of charging")
@@ -65,22 +61,23 @@ for battery in batteries.values():
     print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
 print("================================")
 print("starting to charge battery AAA AND C AND D")
-batteries['battery_AAA/1'].start_charging()  # Start charging the AAA battery
-batteries['battery_C/1'].start_charging()  # Start charging the C battery
-batteries['battery_D/1'].start_charging()  # Start charging the D battery
+sim_env.place_object_in_charger(batteries['battery_AAA/1'],[-0.7, -0.9, 0.09])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_D/1'],[-0.8, -0.9, 0.09])  # Place the AA battery in its charger
+sim_env.place_object_in_charger(batteries['battery_C/1'],[-0.7, -0.65, 0.09])  # Place the AA battery in its charger
+
+executor.wait(1000)  # Wait for the battery to charge
 
 sim_env.wait(6)  # Wait for the battery to charge
 print("after 6 seconds of charging")
 print("================================")
 ### tests_is_damaged_true##
 for battery in batteries.values():
-    #TODO FIRAS FUNCTIONALITY
     print(f"{battery.name}:")
     print(f"is damaged: {semantic.is_damaged(battery)} (Charge: {battery.check_charge_progress()}%)")
 
 
 
 
-sim_env.wait(10)  # Wait for the battery to charge
+sim_env.wait(80)  # Wait for the battery to charge
 
 print("after 16 seconds of charging")

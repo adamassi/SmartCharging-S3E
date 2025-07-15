@@ -3,38 +3,27 @@
         <body name="charger_C" pos="0 0 0">
 
             <!-- Back wall -->
-            <geom name="back_wall" type="box" pos="0 0.012 0.020" size="0.030 0.002 0.020" 
-                  rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
-            <!-- Color: Light gray -->
-
-            <!-- Bottom -->
-            <geom name="bottom" type="box" pos="0 0 0.002" size="0.030 0.01 0.002" rgba=" 0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
+            <geom name="back_wall" type="box" pos="0 0.015 0.015" size="0.038 0.005 0.015" rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
+            
             <!-- Bottom right -->
-            <!-- <geom name="bottom_right" type="box" pos="0.022 0 0.002" size="0.006 0.008 0.002" rgba="0.5 0.5 0.5 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/> -->
+            <!-- <geom name="bottom_right" type="box" pos="0.03 0 0.0025" size="0.008 0.01 0.0025" rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/> -->
+            <geom name="bottom" type="box" pos="0 0 0.002" size="0.038 0.020 0.002" rgba=" 0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
 
             <!-- Right wall -->
-            <geom name="right_wall" type="box" pos="0.03 0 0.010" size="0.002 0.01 0.006" density="1200"
-                  rgba="1 0 0 1" friction="1 0.005 0.0001" condim="4"/>
-            <!-- Color: Red -->
+            <geom name="right_wall" type="box" pos="0.0375 0 0.0125" size="0.002 0.015 0.0075" rgba="1 0 0 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
 
             <!-- Right hook -->
-            <geom name="right_hook" type="box" pos="0.021 -0.012 0.008" size="0.009 0.002 0.008" density="1200"
-                  rgba="0.5 0.5 0.5 1" friction="1 0.005 0.0001" condim="4"/>
-            <!-- Color: Light gray -->
-
+            <geom name="right_hook" type="box" pos="0.03 -0.02 0.01" size="0.008 0.005 0.01" rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
+            
             <!-- Bottom left -->
-            <!-- <geom name="bottom_left" type="box" pos="-0.022 0 0.002" size="0.006 0.008 0.002" rgba="0.5 0.5 0.5 1" mass="0.5" friction="1 0.005 0.0001" condim="4"/> -->
+            <!-- <geom name="bottom_left" type="box" pos="-0.03 0 0.0025" size="0.008 0.01 0.0025" rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/> -->
 
             <!-- Left wall -->
-            <geom name="left_wall" type="box" pos="-0.03 0 0.010" size="0.002 0.01 0.006" density="1200"
-                  rgba="0 0 0 1" friction="1 0.005 0.0001" condim="4"/>
-            <!-- Color: Black -->
+            <geom name="left_wall" type="box" pos="-0.0375 0 0.0125" size="0.002 0.015 0.0075" rgba="0 0 0 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
 
             <!-- Left hook -->
-            <geom name="left_hook" type="box" pos="-0.021 -0.012 0.008" size="0.009 0.002 0.008" density="1200"
-                  rgba="0.5 0.5 0.5 1" friction="1 0.005 0.0001" condim="4"/>
-            <!-- Color: Light gray -->
-
+            <geom name="left_hook" type="box" pos="-0.03 -0.020 0.01" size="0.008 0.005 0.01" rgba="0.5 0.5 0.5 1" density="1200" friction="1 0.005 0.0001" condim="4"/>
+            
             <!-- Make it one solid object -->
             <!-- <joint name="battery_joint" type="free"/> -->
         </body>

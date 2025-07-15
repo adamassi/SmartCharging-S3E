@@ -1,5 +1,6 @@
 # semantic_questions.py
 import numpy as np
+import time
 
 class SmartChargingSemantic:
     """
@@ -22,6 +23,7 @@ class SmartChargingSemantic:
         :return: True if the battery's charge percentage is greater than 60%, False otherwise.
         """
         self.sim_env.select_body(battery.body_name)  # Select the battery body in the simulation environment
+        time.sleep(0.5)  # Allow time for the simulation to update
         return battery.check_charge_progress() > 60.0
 
     def is_compatible_with(self, charger: str, battery):
@@ -42,6 +44,7 @@ class SmartChargingSemantic:
         :param battery: Battery class instance.
         :return: True if the battery is damaged, False otherwise.
         """
+        self.sim_env.select_body(battery.body_name)  # Select the battery body in the simulation environment
         return battery.check_is_damaged()
 # done 
     def should_be_discarded(self, battery):
@@ -58,6 +61,8 @@ class SmartChargingSemantic:
         :param battery: Battery class instance.
         :return: True if the charger is free, False otherwise.
         """
+        type_charger = battery.battery_type + "_charger/charger_"+battery.battery_type  # Define the charger type based on the battery type
+        self.sim_env.select_body(type_charger)  # Select the battery body in the simulation environment
         # Get all valid geometry names in the simulation
         geoms_names = self.sim_env.get_valid_geometry_names()
         # print(geoms_names)
