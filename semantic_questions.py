@@ -36,7 +36,17 @@ class SmartChargingSemantic:
         charger_type = charger.split("_")[1].strip("/")
         return charger_type == battery.battery_type
     
-
+#helper fun 
+    def has_passed_one_year(self, battery):
+        """
+        Check if the battery has passed one year since its creation.
+        :return: True if the battery has passed one year, False otherwise.
+        """
+        # One year in seconds (365 days)
+        one_year_in_seconds = 365 * 24 * 60 * 60
+        elapsed_time = time.time() - battery.creation_time
+        return elapsed_time >= one_year_in_seconds
+        
 # DONE 
     def is_damaged(self, battery):
         """
@@ -51,10 +61,10 @@ class SmartChargingSemantic:
         """
         Check if the battery should be discarded.
         :param battery: Battery class instance.
-        :return: True if the battery is damaged, False otherwise.
+        :return: True if the battery is damaged or has passed one year, False otherwise.
         """
-        return self.is_damaged(battery)
-
+        return self.is_damaged(battery) or self.has_passed_one_year(battery)
+# done
     def is_charger_free_for(self, battery):
         """
         Check if the charger for the given battery type is free (not occupied by another battery).

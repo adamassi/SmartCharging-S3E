@@ -48,7 +48,7 @@ while time.time() - start_time < 5:
 semantic = SmartChargingSemantic(env,batteries)
 print("================================")
 print("placing battery D on its charger")
-env.place_object_in_charger(batteries['battery_C/1'],[-0.8, -0.9, 0.03])  # Place the AA battery in its charger
+env.place_object_in_charger(batteries['battery_C/1'],[-0.9, -0.9, 0.03])  # Place the AA battery in its charger
 print("================================")
 print("placing battery AA on its charger")
 # env.place_object_in_charger(batteries['battery_AA/1'].name,[-0.72, -0.75, 0.03])  # Place the AA battery in its charger

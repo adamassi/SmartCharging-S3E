@@ -451,7 +451,7 @@ class SimEnv:
 
     
         # time.sleep(2)
-    def remove_object_from_charger(self, object_name,new_position=[0, -0.9, 0.8]):
+    def remove_object_from_charger(self, object_name,new_position=[0, -0.9, 0.08]):
         """
         Remove an object from the charger by resetting its position and rotation.
 

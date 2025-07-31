@@ -36,13 +36,13 @@ class Battery:
         # Set charging rate and battery_died based on battery type
         if self.battery_type == "C":
             self.charging_rate = 0.15
-            self.battery_died = 10  # Example: C-type batteries can charge for 10 seconds before damage
+            self.battery_died = 3000  #  C-type batteries can charge for  seconds before damage
         elif self.battery_type == "D":
             self.charging_rate = 0.05
-            self.battery_died = 15  # Example: D-type batteries can charge for 15 seconds before damage
+            self.battery_died = 4000 #  D-type batteries can charge for seconds before damage
         else:
             self.charging_rate = charging_rate
-            self.battery_died = 4  # Default value for other battery types
+            self.battery_died = 10  # Default value for other battery types
 
 
     def _extract_battery_type(self, name: str) -> str:
@@ -101,7 +101,9 @@ class Battery:
         """
         
         if self.is_charging:
+
             elapsed_time = time.time() - self.charge_start_time
+            
             added_charge = elapsed_time * self.charging_rate
             current_charge = min(100.0, self.charge_percent + added_charge)
             # print(f"[{self.name}] ({self.battery_type}) Current charge: {current_charge:.2f}%")
