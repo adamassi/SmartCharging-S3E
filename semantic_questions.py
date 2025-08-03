@@ -15,7 +15,7 @@ class SmartChargingSemantic:
         """
         self.sim_env = sim_env
         self.batteries = batteries
-# done 
+
     def is_charged(self, battery):
         """
         Check if the battery is charged.
@@ -35,19 +35,18 @@ class SmartChargingSemantic:
         """
         charger_type = charger.split("_")[1].strip("/")
         return charger_type == battery.battery_type
-    
-#helper fun 
+
     def has_passed_one_year(self, battery):
         """
         Check if the battery has passed one year since its creation.
+        :param battery: Battery class instance.
         :return: True if the battery has passed one year, False otherwise.
         """
         # One year in seconds (365 days)
         one_year_in_seconds = 365 * 24 * 60 * 60
         elapsed_time = time.time() - battery.creation_time
         return elapsed_time >= one_year_in_seconds
-        
-# DONE 
+
     def is_damaged(self, battery):
         """
         Check if the battery is physically damaged.
@@ -56,7 +55,7 @@ class SmartChargingSemantic:
         """
         self.sim_env.select_body(battery.body_name)  # Select the battery body in the simulation environment
         return battery.check_is_damaged()
-# done 
+
     def should_be_discarded(self, battery):
         """
         Check if the battery should be discarded.
@@ -64,23 +63,21 @@ class SmartChargingSemantic:
         :return: True if the battery is damaged or has passed one year, False otherwise.
         """
         return self.is_damaged(battery) or self.has_passed_one_year(battery)
-# done
+
     def is_charger_free_for(self, battery):
         """
         Check if the charger for the given battery type is free (not occupied by another battery).
         :param battery: Battery class instance.
-        :return: True if the charger is free, False otherwise.
+        :return: True if the charger is free or battery is charging, False otherwise.
         """
-        type_charger = battery.battery_type + "_charger/charger_"+battery.battery_type  # Define the charger type based on the battery type
+        type_charger = battery.battery_type + "_charger/charger_" + battery.battery_type  # Define the charger type based on the battery type
         self.sim_env.select_body(type_charger)  # Select the battery body in the simulation environment
+
         # Get all valid geometry names in the simulation
         geoms_names = self.sim_env.get_valid_geometry_names()
-        # print(geoms_names)
-        # keep only geometries that are starting with the battery 
-        geoms_names = [geom for geom in geoms_names if geom.startswith('battery_')]
 
-        # Exclude geometries related to the table
-        # geoms_names = [geom for geom in geoms_names if "table" not in geom]
+        # Filter geometries that start with 'battery_'
+        geoms_names = [geom for geom in geoms_names if geom.startswith('battery_')]
 
         # Define the charger geometry name for the battery type
         charger_geom = f"{battery.battery_type}_charger/bottom"
@@ -91,6 +88,14 @@ class SmartChargingSemantic:
             if not np.array_equal(normal_force, np.array([0, 0, 0])):
                 return False  # Charger is occupied
         return True  # Charger is free
+
+    def is_charging(self, battery):
+        """
+        Check if the battery is currently charging.
+        :param battery: Battery class instance.
+        :return: True if the battery is charging, False otherwise.
+        """
+        return battery.is_charging
 
     def get_state(self):
         """
@@ -108,17 +113,22 @@ class SmartChargingSemantic:
             answers.append(charged)
             predicates.append(f"IsCharged({battery.name})")
 
-            # Semantic Question 2: Is the battery damaged?
+            # Semantic Question 2: Is the battery charging?
+            charging = self.is_charging(battery)
+            answers.append(charging)
+            predicates.append(f"IsCharging({battery.name})")
+
+            # Semantic Question 3: Is the battery damaged?
             damaged = self.is_damaged(battery)
             answers.append(damaged)
             predicates.append(f"IsDamaged({battery.name})")
 
-            # Semantic Question 3: Should the battery be discarded?
+            # Semantic Question 4: Should the battery be discarded?
             discarded = self.should_be_discarded(battery)
             answers.append(discarded)
             predicates.append(f"ShouldBeDiscarded({battery.name})")
 
-            # Semantic Question 4: Is the charger free for the battery?
+            # Semantic Question 5: Is the charger free for the battery?
             charger_free = self.is_charger_free_for(battery)
             answers.append(charger_free)
             predicates.append(f"IsChargerFreeFor({battery.name})")
@@ -126,62 +136,41 @@ class SmartChargingSemantic:
         # Return the answers as a NumPy array and the predicates as a list
         return np.array(answers), predicates
 
+    def success_score(self, current_state, goal):
+        """
+        Calculates a success score based on the state of individual batteries.
+        The total score is divided among batteries defined in the goal.
+        A battery gets its points if it meets the 'IsCharged' goal. 80 if the battery is charging, 60 percent if the charger is free and the battery is not charged, 50 percent if the charger is not free and it is not charged, 20 percent if the battery is not charged and there is a battery of the same type in the charger, but gets 0 if it's damaged.
 
-def success_score(current_state, goal):
-    """
-    Calculates a success score based on the state of individual batteries.
-    The total score is divided among batteries defined in the goal.
-    A battery gets its points if it meets the 'IsCharged' goal, but gets 0 if it's damaged.
+        :param current_state: A tuple (answers, predicates) from semantic.get_state().
+        :param goal: A list of goal predicates.
+        :return: A success score from 0 to 100.
+        """
+        current_answers, current_predicates = current_state
+        current_results = dict(zip(current_predicates, current_answers))
+        total_score = 0.0
+        # print(current_results)
+        for predicate in goal:
+            if predicate.startswith("IsCharged"):
+                battery_name = predicate.split("(")[1].split(")")[0]
+                if current_results.get(f"ShouldBeDiscarded({battery_name})", True):
+                    total_score += 0.0
+                elif current_results.get(f"IsCharged({battery_name})", True):
+                    total_score += 100.0
+                elif current_results.get(f"IsCharging({battery_name})", False):
+                    total_score += 80.0
+                elif current_results.get(f"IsChargerFreeFor({battery_name})", False):
+                    total_score += 60.0
+                elif not current_results.get(f"IsChargerFreeFor({battery_name})", True) and not current_results.get(f"IsCharged({battery_name})", False):
+                    total_score += 50.0
+                elif not current_results.get(f"IsCharged({battery_name})", False) and current_results.get(f"IsChargerFreeFor({battery_name})", True):
+                    total_score += 20.0
+                else:
+                    total_score += 0.0  # Battery is damaged or does not meet any criteria
 
-    :param current_state: A tuple (answers, predicates) from semantic.get_state().
-    :param goal: A dictionary mapping predicate strings to their desired boolean state.
-    :return: A success score from 0 to 100.
-    """
-    current_answers, current_predicates = current_state
-    current_results = dict(zip(current_predicates, current_answers))
+        # Divide the total score by the number of elements in the goal
+        if len(goal) > 0:
+            total_score /= len(goal)
 
-    # Identify unique batteries mentioned in the goal
-    goal_batteries = set()
-    for predicate in goal.keys():
-        match = re.search(r'\((.*?)\)', predicate)
-        if match:
-            goal_batteries.add(match.group(1))
-
-    if not goal_batteries:
-        return 100.0  # No goals defined, so success is 100%
-
-    points_per_battery = 100.0 / len(goal_batteries)
-    total_score = 0.0
-
-    for battery_name in goal_batteries:
-        # Define predicates for this specific battery
-        goal_is_charged_predicate = f"IsCharged({battery_name})"
-        state_is_charged_predicate = f"IsCharged({battery_name})"
-        state_is_damaged_predicate = f"IsDamaged({battery_name})"
-
-        # Check if the goal is for this battery to be charged
-        if goal.get(goal_is_charged_predicate, False):
-            # If battery is not in the current state, it gets 0 points
-            if state_is_charged_predicate not in current_results:
-                continue
-
-            # CRITICAL FAILURE: If the battery is damaged, it gets 0 points.
-            if current_results.get(state_is_damaged_predicate, False):
-                battery_score = 0.0
-            # SUCCESS: If the battery is charged in the current state, it gets full points.
-            elif current_results.get(state_is_charged_predicate, False):
-                battery_score = points_per_battery
-            # FAILURE: Otherwise (not charged), it gets 0 points.
-            else:
-                battery_score = 0.0
-            
-            total_score += battery_score
-        else:
-            # If the goal for this battery is not about being charged,
-            # you could add other logic here. For now, we assume it contributes
-            # its full points if it simply exists, or handle other predicates.
-            # Let's assume for now only 'IsCharged' goals contribute to the score.
-            pass
-
-    return total_score
+        return total_score
 

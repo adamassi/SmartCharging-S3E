@@ -10,7 +10,9 @@ from battery_class import Battery
 """
 time battery_AA is charged  2.5 seconds
 time battery_AAA is charged : 2.5 seconds
-time battery_C is charged :  800 s"""
+time battery_C is charged :  800 s
+we can stop charging batterys and still on the charger 
+"""
 
 # === Setup ===
 # Initialize the simulation environment and motion executor
@@ -41,7 +43,7 @@ expected_predicates = []
 
 for battery_name, battery in batteries.items():
     # Append expected results for each battery
-    expected_results.extend([False, False, False, True])  # Not charged, Not damaged, Not discarded, Charger free
+    expected_results.extend([False, False, False, False, True])  # Not charged, Not charging, Not damaged, Not discarded, Charger free
 
 # === Initial State Check ===
 # Run the semantic reasoning to get the initial state
@@ -78,26 +80,26 @@ executor.wait(100)
 
 sim_env.wait(11)  # Wait long enough for the battery to become damaged
 # expected_results for AAA
-expected_results.extend([True, True, True,  True])
+expected_results.extend([True, False, True, True,  True])
 #this for AA
-expected_results.extend([True, False, False, False])
+expected_results.extend([True, False, False, False, False])
 
 batt_AAA.stop_charging()  # Stop charging battery_AAA
 print("== Finished charging battery_AAA ===")
 
 print("==Remove battery_AAA from charger===")
-sim_env.remove_object_from_charger(batt_AAA.name, [-0.55, 0.0, 0.04])  # Remove battery_AAA from its charger
+sim_env.remove_object_from_charger(batt_AAA.name, [-0.55, 0.0, 0.03])  # Remove battery_AAA from its charger
 
 # Change 3: Place battery_C on its charger to make its charger "not free"
 print("== Starting to place battery_C in charger ===")
 # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 sim_env.place_object_in_charger(batteries['battery_C/1'], [-0.7, -0.65, 0.09])  # Place battery_C in its charger
-expected_results.extend([False, False, False, False])
+expected_results.extend([False, True, False, False, False])
 # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 # sim_env.wait(100)  # Wait for the simulation to update
 
-expected_results.extend([False, False, False, True])
+expected_results.extend([False, False, False, False, True])
 
 print("===============")
 print("State Check After Changes")
