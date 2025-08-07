@@ -67,7 +67,7 @@ cd SmartCharging-S3E
 
 ```bash
 py -3.10 -m venv venv
-.env\Scriptsctivate
+.venv\Scripts\Activate
 pip install -r requirements.txt
 ```
 
