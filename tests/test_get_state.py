@@ -2,7 +2,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import numpy as np
 from semantic_questions import SmartChargingSemantic
 from sim_ur5.mujoco_env.sim_env import SimEnv
 from sim_ur5.motion_planning.motion_executor import MotionExecutor
@@ -124,7 +123,7 @@ for ans, pred, exp in zip(answers, predicates, expected_results):
     assert ans == exp  # Ensure the actual state matches the expected state
 
 print("✅ All get_state checks passed.")
-sim_env.wait(1000)  # Wait for the simulation to update
+sim_env.wait(100)  # Wait for the simulation to update
 
 
 

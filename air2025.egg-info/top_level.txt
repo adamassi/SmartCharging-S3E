@@ -1,2 +1,0 @@
-motion_planner
-sim_ur5
